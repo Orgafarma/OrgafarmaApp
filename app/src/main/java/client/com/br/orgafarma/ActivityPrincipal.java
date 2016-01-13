@@ -29,7 +29,6 @@ public class ActivityPrincipal extends AppCompatActivity {
     DrawerLayout drawerLayout;
     Toolbar toolbar;
     ActionBar actionBar;
-    EditText teste = new EditText(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
