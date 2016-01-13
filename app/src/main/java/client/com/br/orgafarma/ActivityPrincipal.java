@@ -30,7 +30,6 @@ public class ActivityPrincipal extends AppCompatActivity {
     Toolbar toolbar;
     ActionBar actionBar;
 
-    ActionBar actionBar2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
