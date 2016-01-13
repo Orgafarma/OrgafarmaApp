@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_subheader"
+            android:title="Vendas">
+            <menu>
+                <item
+                    android:id="@+id/navigation_sub_item_1"
+                    android:icon="@drawable/ic_currency_usd_grey600_24dp"
+                    android:title="Detalhes Venda do Mês"/>
+                <item
+                    android:id="@+id/navigation_sub_item_2"
+                    android:icon="@drawable/ic_file_document_box_grey600_24dp"
+                    android:title="Venda Vendedor/Televendas"/>
+            </menu>
+        </item>
+    </group>
+
+
+</menu>

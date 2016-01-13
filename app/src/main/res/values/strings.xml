@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Orgafarma</string>
+
+    <string name="lbl_senha">Senha</string>
+    <string name="lbl_usuario">Usuario</string>
+    <string name="btn_logar">Logar</string>
+    <string name="url_site">www.orgafarma.com.br</string>
+
+    <string name="action_settings">Configuração</string>
+
+    <!-- Mensagens Login -->
+    <string name="msg_login_senha_obg">Login e Senha obrigatórios</string>
+    <string name="msg_login_obg">Preencher o campo Login</string>
+    <string name="msg_senha_obg">Preencher o caompo Senha</string>
+    <string name="msg_login_sucesso">Logado com Sucesso</string>
+    <string name="msg_login_invalido">Usuário ou Senha inválidos</string>
+
+</resources>
