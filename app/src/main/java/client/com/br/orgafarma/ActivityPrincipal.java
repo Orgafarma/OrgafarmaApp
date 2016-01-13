@@ -30,6 +30,7 @@ public class ActivityPrincipal extends AppCompatActivity {
     Toolbar toolbar;
     ActionBar actionBar;
     //teste de commit android
+    //TESTE COMMIT 2
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
