@@ -1,5 +1,8 @@
 package client.com.br.orgafarma;
 
+/**
+ * Created by Felipe on 16/11/2015.
+ */
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,8 +41,8 @@ public class ActivityPrincipal extends AppCompatActivity {
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
 
         actionBar = getSupportActionBar();
-        //actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
-        //actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.navigation_drawer_layout);
 
