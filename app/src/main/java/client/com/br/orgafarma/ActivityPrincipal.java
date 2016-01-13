@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import client.com.br.orgafarma.Fragment.InboxFragment;
@@ -28,6 +29,7 @@ public class ActivityPrincipal extends AppCompatActivity {
     DrawerLayout drawerLayout;
     Toolbar toolbar;
     ActionBar actionBar;
+    EditText teste = new EditText(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

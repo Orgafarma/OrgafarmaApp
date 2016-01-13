@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Orgafarma.iml" filepath="$PROJECT_DIR$/Orgafarma.iml" />
+      <module fileurl="file://$PROJECT_DIR$/OrgafarmaApp.iml" filepath="$PROJECT_DIR$/OrgafarmaApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
