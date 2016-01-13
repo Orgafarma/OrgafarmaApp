@@ -29,7 +29,7 @@ public class ActivityPrincipal extends AppCompatActivity {
     DrawerLayout drawerLayout;
     Toolbar toolbar;
     ActionBar actionBar;
-    //teste de commit
+    //teste de commit android
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
