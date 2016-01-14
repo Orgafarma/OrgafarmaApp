@@ -19,7 +19,7 @@ import Util.MensagemUtil;
  * Created by Felipe on 16/11/2015.
  */
 public class LoginActivity extends AppCompatActivity {
-    //
+
     private LoginBO loginBO;
     private EditText edtlogin;
     private EditText edtSenha;
