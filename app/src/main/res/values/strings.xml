@@ -11,7 +11,7 @@
     <!-- Mensagens Login -->
     <string name="msg_login_senha_obg">Login e Senha obrigatórios</string>
     <string name="msg_login_obg">Preencher o campo Login</string>
-    <string name="msg_senha_obg">Preencher o caompo Senha</string>
+    <string name="msg_senha_obg">Preencher o campo Senha</string>
     <string name="msg_login_sucesso">Logado com Sucesso</string>
     <string name="msg_login_invalido">Usuário ou Senha inválidos</string>
 
