@@ -2,7 +2,12 @@ package Util;
 
 import android.util.Log;
 
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.ksoap2.SoapEnvelope;
+import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -23,7 +28,7 @@ public class WebServiceUtil {
     private static final String URL = "http://10.1.0.136/webservice.php?wsdl";
     private static String METHOD_NAME;
 
-    public static ValidacaoLogin loginWebService(String usuario, String senha){
+    public static ValidacaoLogin loginWebService(String usuario, String senha) throws SoapFault {
 
         ValidacaoLogin validacao = new ValidacaoLogin();
 
@@ -52,21 +57,16 @@ public class WebServiceUtil {
 
         try {
             httpTransportSE.call(SOAP_ACTION, envelope);
-            Object response = envelope.getResponse();
-            validacao.setValido(Boolean.parseBoolean(response.toString()));
-            //Log.i("Informacao: ", response.toString());
-            validacao.setErro(false);
+            Gson gson = new Gson();
+            validacao =  gson.fromJson(envelope.getResponse().toString(), ValidacaoLogin.class);
         } catch (IOException e) {
-            validacao.setValido(false);
-            validacao.setErro(true);
-            validacao.setMensagem("Não foi possível estabelecer conexão com servidor");
+            Gson gson = new Gson();
+            validacao =  gson.fromJson(envelope.getResponse().toString(), ValidacaoLogin.class);
             return validacao;
 
         } catch (XmlPullParserException e) {
-            validacao.setValido(false);
-            validacao.setErro(true);
-            Log.e("Erro", e.getMessage());
-            validacao.setMensagem("Não foi possível estabelecer conexão com servidor");
+            Gson gson = new Gson();
+            validacao =  gson.fromJson(envelope.getResponse().toString(), ValidacaoLogin.class);
             return validacao;
         }
 

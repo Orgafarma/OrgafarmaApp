@@ -1,13 +1,32 @@
 package Dominio;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+
 /**
  * Created by Felipe on 19/11/2015.
  */
-public class ValidacaoLogin {
+public class ValidacaoLogin implements Serializable{
+
+    @SerializedName("login")
     private boolean valido;
 
+    @SerializedName("erro")
     private boolean erro;
 
+    @SerializedName("token")
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    @SerializedName("mensagem")
     private String mensagem;
 
     public boolean isValido() {

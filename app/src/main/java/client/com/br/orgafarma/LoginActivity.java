@@ -11,7 +11,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.ksoap2.SoapFault;
+
 import BO.LoginBO;
+import Constantes.SharePreferenceCons;
 import Dominio.ValidacaoLogin;
 import Util.MensagemUtil;
 
@@ -19,7 +22,7 @@ import Util.MensagemUtil;
  * Created by Felipe on 16/11/2015.
  */
 public class LoginActivity extends AppCompatActivity {
-    // Esse e um teste
+
     private LoginBO loginBO;
     private EditText edtlogin;
     private EditText edtSenha;
@@ -80,8 +83,10 @@ public class LoginActivity extends AppCompatActivity {
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-                return null;
+            } catch (SoapFault soapFault) {
+                soapFault.printStackTrace();
             }
+            return null;
         }
 
         @Override
@@ -93,9 +98,10 @@ public class LoginActivity extends AppCompatActivity {
                 if(saveLoginCheckBox.isChecked()){
                     username = edtlogin.getText().toString();
                     password = edtSenha.getText().toString();
-                    loginPrefsEditor.putBoolean("saveLogin", true);
-                    loginPrefsEditor.putString("login", username);
-                    loginPrefsEditor.putString("senha", password);
+                    loginPrefsEditor.putBoolean(SharePreferenceCons.Login.SAVE_LOGIN, true);
+                    loginPrefsEditor.putString(SharePreferenceCons.Login.LOGIN, username);
+                    loginPrefsEditor.putString(SharePreferenceCons.Login.SENHA, password);
+                    loginPrefsEditor.putString(SharePreferenceCons.Login.TOKEN, validacao.getToken());
                     loginPrefsEditor.commit();
                 }
                 else {

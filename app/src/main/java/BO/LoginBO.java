@@ -2,6 +2,8 @@ package BO;
 
 import android.content.Context;
 
+import org.ksoap2.SoapFault;
+
 import Dominio.ValidacaoLogin;
 import Util.WebServiceUtil;
 import client.com.br.orgafarma.R;
@@ -17,7 +19,7 @@ public class LoginBO {
         this.context = context;
     }
 
-    public ValidacaoLogin validarLogin(String login, String senha) {
+    public ValidacaoLogin validarLogin(String login, String senha) throws SoapFault {
         ValidacaoLogin validacao = new ValidacaoLogin();
 
         if ((login == null || login.equals("")) && (senha == null || senha.equals(""))) {
