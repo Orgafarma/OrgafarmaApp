@@ -8,6 +8,6 @@ public class SharePreferenceCons {
         public static String SAVE_LOGIN = "saveLogin";
         public static String LOGIN = "login";
         public static String SENHA = "senha";
-        public static String TOKEN = "saveLogin";
+        public static String TOKEN = "token";
     }
 }
