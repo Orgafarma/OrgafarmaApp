@@ -1,12 +1,21 @@
 package client.com.br.orgafarma.Modal;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+
 /**
  * Created by Felipe on 25/11/2015.
  */
-public class PrazoMedio {
+public class PrazoMedio implements Serializable{
 
+    @SerializedName("Meta")
     private String meta;
+
+    @SerializedName("Atual")
     private String atual;
+
+    @SerializedName("Variacao")
     private String variacao;
 
     public String getMeta() {

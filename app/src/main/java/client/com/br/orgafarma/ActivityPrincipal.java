@@ -20,6 +20,8 @@ import android.view.SubMenu;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import application.OrgafarmaApplication;
+import client.com.br.orgafarma.Fragment.CotacaoFragment;
 import client.com.br.orgafarma.Fragment.InboxFragment;
 import client.com.br.orgafarma.Fragment.InboxVendaVendedorFragment;
 
@@ -29,8 +31,7 @@ public class ActivityPrincipal extends AppCompatActivity {
     DrawerLayout drawerLayout;
     Toolbar toolbar;
     ActionBar actionBar;
-    //teste de commit android
-    //TESTE COMMIT 2
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +57,6 @@ public class ActivityPrincipal extends AppCompatActivity {
         setupNavigationDrawerContent(navigationView);
 
         setFragment(0);
-
     }
 
     // A method to find height of the status bar
@@ -86,7 +86,7 @@ public class ActivityPrincipal extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupNavigationDrawerContent(NavigationView navigationView) {
+    private void setupNavigationDrawerContent(final NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -98,10 +98,15 @@ public class ActivityPrincipal extends AppCompatActivity {
                                 drawerLayout.closeDrawer(GravityCompat.START);
                                 return true;
 
-
                             case R.id.navigation_sub_item_2:
                                 menuItem.setChecked(true);
                                 setFragment(R.id.navigation_sub_item_2);
+                                drawerLayout.closeDrawer(GravityCompat.START);
+                                return true;
+
+                            case R.id.navigation_cotacao:
+                                menuItem.setChecked(true);
+                                setFragment(R.id.navigation_cotacao);
                                 drawerLayout.closeDrawer(GravityCompat.START);
                                 return true;
 
@@ -123,14 +128,23 @@ public class ActivityPrincipal extends AppCompatActivity {
                 InboxFragment inboxFragment = new InboxFragment();
                 fragmentTransaction.replace(R.id.fragment, inboxFragment);
                 fragmentTransaction.commit();
-            break;
-
+                break;
             case R.id.navigation_sub_item_2:
                 InboxVendaVendedorFragment fragment = new InboxVendaVendedorFragment();
                 fragmentTransaction.replace(R.id.fragment, fragment);
                 fragmentTransaction.commit();
+                break;
+            case R.id.navigation_cotacao:
+                CotacaoFragment cotacaoFragment = new CotacaoFragment();
+                fragmentTransaction.replace(R.id.fragment, cotacaoFragment);
+                fragmentTransaction.commit();
+                break;
 
         }
+    }
+
+    private void setConclurOn(){
+
     }
 }
 

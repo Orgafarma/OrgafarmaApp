@@ -692,4 +692,5 @@
     <color name="md_statusbar_translucent">#4000</color>
 
     <color name="md_orgafarma">#019CAE</color>
+    <item name="my_color" type="color">#ff0000</item>
 </resources>

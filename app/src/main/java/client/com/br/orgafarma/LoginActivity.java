@@ -17,6 +17,7 @@ import BO.LoginBO;
 import Constantes.SharePreferenceCons;
 import Dominio.ValidacaoLogin;
 import Util.MensagemUtil;
+import application.OrgafarmaApplication;
 
 /**
  * Created by Felipe on 16/11/2015.
@@ -47,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         saveLogin = loginPreferences.getBoolean("saveLogin", false);
 
         if(saveLogin == true){
+            OrgafarmaApplication.TOKEN = loginPreferences.getString(SharePreferenceCons.Login.TOKEN, "");
             Intent i = new Intent(LoginActivity.this, ActivityPrincipal.class);
             i.putExtra("msg", "Logado com Sucesso");
             startActivity(i);
@@ -55,10 +57,14 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    private void saveToken(){
+
+    }
+
+
     public void logar(View view) {
         new LodingAsync().execute();
     }
-
 
     private class LodingAsync extends AsyncTask<Void, Void, ValidacaoLogin> {
 
@@ -102,9 +108,11 @@ public class LoginActivity extends AppCompatActivity {
                     loginPrefsEditor.putString(SharePreferenceCons.Login.LOGIN, username);
                     loginPrefsEditor.putString(SharePreferenceCons.Login.SENHA, password);
                     loginPrefsEditor.putString(SharePreferenceCons.Login.TOKEN, validacao.getToken());
+                    OrgafarmaApplication.TOKEN = validacao.getToken();
                     loginPrefsEditor.commit();
                 }
                 else {
+                    OrgafarmaApplication.TOKEN = validacao.getToken();
                     loginPrefsEditor.clear();
                     loginPrefsEditor.commit();
                 }

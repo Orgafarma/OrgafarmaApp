@@ -18,6 +18,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,8 +28,10 @@ import java.util.ArrayList;
 
 import BO.VendasBO;
 import client.com.br.orgafarma.ActivityPrincipal;
+import client.com.br.orgafarma.Modal.Pacote;
 import client.com.br.orgafarma.Modal.PrazoMedio;
 import client.com.br.orgafarma.Modal.PrevisaoVendaVendedorTelevendas;
+import client.com.br.orgafarma.Modal.VendaTelevenda;
 import client.com.br.orgafarma.Modal.VendaVendedorTelevendas;
 import client.com.br.orgafarma.R;
 
@@ -39,7 +43,7 @@ public class InboxVendaVendedorFragment extends Fragment {
 
         final View view = inflater.inflate(R.layout.fragment_inbox_venda_vendedor, container, false);
 
-        ((ActivityPrincipal) getActivity()).getSupportActionBar().setTitle("Venda Vendedor/Televendas");
+        ((ActivityPrincipal) getActivity()).getSupportActionBar().setTitle("VendaMes Vendedor/Televendas");
 
         new LoadingAsync(getActivity(), view).execute();
 
@@ -47,7 +51,7 @@ public class InboxVendaVendedorFragment extends Fragment {
         return view;
     }
 
-    private class LoadingAsync extends AsyncTask<Void, Void, PrevisaoVendaVendedorTelevendas> {
+    private class LoadingAsync extends AsyncTask<Void, Void, VendaTelevenda> {
 
         ProgressDialog progressDialog = new ProgressDialog(getActivity());
 
@@ -68,51 +72,20 @@ public class InboxVendaVendedorFragment extends Fragment {
         }
 
         @Override
-        protected PrevisaoVendaVendedorTelevendas doInBackground(Void... params) {
-            PrevisaoVendaVendedorTelevendas previsaoVenda = new PrevisaoVendaVendedorTelevendas();
-
+        protected VendaTelevenda doInBackground(Void... params) {
+            VendaTelevenda vendaTelevenda;
+            Gson gson = new Gson();
             try {
-                JSONObject jsonObject = new JSONObject(VendasBO.listaVendaVendedorTelevendas());
-
-                JSONObject vendas = jsonObject.getJSONObject("Vendas");
-
-                JSONArray prazo = vendas.getJSONArray("PrazoMedio");
-
-                PrazoMedio prazoMedio = new PrazoMedio();
-
-                for (int j = 0; j < prazo.length(); j++) {
-                    prazoMedio.setMeta(prazo.getJSONObject(j).getString("Meta"));
-                    prazoMedio.setAtual(prazo.getJSONObject(j).getString("Atual"));
-                    prazoMedio.setVariacao(prazo.getJSONObject(j).getString("Variacao"));
-                }
-
-                previsaoVenda.setPrazoMedio(prazoMedio);
-
-                JSONArray pacotes = vendas.getJSONArray("Pacotes");
-
-                previsaoVenda.setListaPrevisaoVendaVendedorTelevendas(new ArrayList<VendaVendedorTelevendas>());
-
-                for (int j = 0; j < pacotes.length(); j++) {
-                    VendaVendedorTelevendas vendedorTelevendas = new VendaVendedorTelevendas();
-                    vendedorTelevendas.setPacote(pacotes.getJSONObject(j).getString("Pacote"));
-                    vendedorTelevendas.setVendedor(pacotes.getJSONObject(j).getString("Vendedor"));
-                    vendedorTelevendas.setTelevendas(pacotes.getJSONObject(j).getString("Televendas"));
-
-                    previsaoVenda.getListaPrevisaoVendaVendedorTelevendas().add(vendedorTelevendas);
-                }
-
-                previsaoVenda.setValorLogistica(jsonObject.getJSONObject("Vendas").getString("Logistica"));
-
+                vendaTelevenda = gson.fromJson(new JSONObject(VendasBO.listaVendaVendedorTelevendas()).toString(), VendaTelevenda.class);
             } catch (JSONException e) {
                 Log.i("ERRO", e.getMessage());
                 return null;
             }
-
-            return previsaoVenda;
+            return vendaTelevenda;
         }
 
         @Override
-        protected void onPostExecute(PrevisaoVendaVendedorTelevendas previsaoVenda) {
+        protected void onPostExecute(VendaTelevenda previsaoVenda) {
             int totalVendedor = 0;
             int totalTelevendas = 0;
 
@@ -126,37 +99,37 @@ public class InboxVendaVendedorFragment extends Fragment {
                 addCabecalhoPrazo(params);
 
                 TableRow tableRow0 = new TableRow(mContext);
-                adicionaTextViewLinha(tableRow0, params, previsaoVenda.getPrazoMedio().getMeta(), false, 0);
-                adicionaTextViewLinha(tableRow0, params, previsaoVenda.getPrazoMedio().getAtual(), false, 0);
-                adicionaTextViewLinha(tableRow0, params, previsaoVenda.getPrazoMedio().getVariacao(), false, 0);
+                adicionaTextViewLinha(tableRow0, params, previsaoVenda.getVendaMesTel().getPrazoMedios().get(0).getMeta(), false, 0);
+                adicionaTextViewLinha(tableRow0, params, previsaoVenda.getVendaMesTel().getPrazoMedios().get(0).getAtual(), false, 0);
+                adicionaTextViewLinha(tableRow0, params, previsaoVenda.getVendaMesTel().getPrazoMedios().get(0).getVariacao(), false, 0);
                 stkPrazo.addView(tableRow0);
 
-                for (int i = 0; i < previsaoVenda.getListaPrevisaoVendaVendedorTelevendas().size(); i++) {
+
+
+                for (int i = 0; i < previsaoVenda.getVendaMesTel().getPacotes().size(); i++) {
+                    Pacote pct = previsaoVenda.getVendaMesTel().getPacotes().get(i);
+
                     params.setMargins(0, 10, 0, 0);
                     TableRow tbrow = new TableRow(mContext);
 
-                    adicionaTextViewLinha(tbrow, params, previsaoVenda.getListaPrevisaoVendaVendedorTelevendas().get(i).getPacote(), false, 0);
-                    adicionaTextViewLinha(tbrow, params, previsaoVenda.getListaPrevisaoVendaVendedorTelevendas().get(i).getVendedor(), false, 0);
-                    adicionaTextViewLinha(tbrow, params, previsaoVenda.getListaPrevisaoVendaVendedorTelevendas().get(i).getTelevendas(), false, 0);
+                    adicionaTextViewLinha(tbrow, params, pct.getPacote(), false, 0);
+                    adicionaTextViewLinha(tbrow, params, pct.getVendedor() + "", false, 0);
+                    adicionaTextViewLinha(tbrow, params, pct.getTelevenda() + "", false, 0);
 
-                    totalVendedor += Integer.parseInt(previsaoVenda.getListaPrevisaoVendaVendedorTelevendas().get(i).getVendedor());
-                    totalTelevendas += Integer.parseInt(previsaoVenda.getListaPrevisaoVendaVendedorTelevendas().get(i).getTelevendas());
+                    totalVendedor += new Double(pct.getVendedor()).intValue();
+                    totalTelevendas += new Double(pct.getTelevenda()).intValue();
 
                     stk.addView(tbrow);
                 }
-
-                int valorLogisitica = Integer.parseInt(previsaoVenda.getValorLogistica());
-
+                int valorLogisitica = new Double(previsaoVenda.getVendaMesTel().getLogistica()).intValue();
                 adicionaLinhaTotal(rootView, mContext, totalTelevendas, totalVendedor, params, stk, valorLogisitica, previsaoVenda);
             } else {
                 Log.i("Erro", "Erro no preenchimento das tabelas");
             }
-
             progressDialog.dismiss();
-
         }
 
-        private void adicionaLinhaTotal(View rootView, Context context, int totalVendendor, int totalTelevendas, TableRow.LayoutParams params, TableLayout stk, int valorLogistica, PrevisaoVendaVendedorTelevendas previsaoVenda) {
+        private void adicionaLinhaTotal(View rootView, Context context, int totalVendendor, int totalTelevendas, TableRow.LayoutParams params, TableLayout stk, int valorLogistica, VendaTelevenda previsaoVenda) {
             TableRow tbrow0 = (TableRow) new TableRow(rootView.getContext());
 
             adicionaTextViewLinha(tbrow0, params, "SubTotal - Vendedor", false, 16f);
@@ -170,7 +143,7 @@ public class InboxVendaVendedorFragment extends Fragment {
             TableRow tbrow1 = (TableRow) new TableRow(rootView.getContext());
 
             adicionaTextViewLinha(tbrow1, params, "Logistica", false, 16f);
-            adicionaTextViewLinha(tbrow1, params, previsaoVenda.getValorLogistica(), false, 16f);
+            adicionaTextViewLinha(tbrow1, params, previsaoVenda.getVendaMesTel().getLogistica() + "", false, 16f);
             stk.addView(tbrow1);
 
 

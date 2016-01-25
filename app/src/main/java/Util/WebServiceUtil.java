@@ -16,7 +16,9 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
+import Constantes.SharePreferenceCons;
 import Dominio.ValidacaoLogin;
+import application.OrgafarmaApplication;
 
 /**
  * Created by Felipe on 19/11/2015.
@@ -76,7 +78,15 @@ public class WebServiceUtil {
     public static String listaPrevisaoVenda(){
 
         METHOD_NAME = "previsaoVenda";
+
+        PropertyInfo infToken = new PropertyInfo();
+        infToken.setName(SharePreferenceCons.Login.TOKEN);
+        infToken.setValue(OrgafarmaApplication.TOKEN);
+        infToken.setType(String.class);
+
+
         SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+        request.addProperty(infToken);
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(request);
 
@@ -100,7 +110,13 @@ public class WebServiceUtil {
     public static String listaVendaVendedorTelevendas(){
 
         METHOD_NAME = "vendaVendedorTelevendas";
+        PropertyInfo infToken = new PropertyInfo();
+        infToken.setName(SharePreferenceCons.Login.TOKEN);
+        infToken.setValue(OrgafarmaApplication.TOKEN);
+        infToken.setType(String.class);
+
         SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+        request.addProperty(infToken);
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(request);
 

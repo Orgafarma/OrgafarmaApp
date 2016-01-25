@@ -15,4 +15,13 @@
     <string name="msg_login_sucesso">Logado com Sucesso</string>
     <string name="msg_login_invalido">Usuário ou Senha inválidos</string>
 
+    <!-- fragment cotação -->
+    <string name="produto">Produto:</string>
+    <string name="add">Adicionar</string>
+    <string name="cotacao">Cotação</string>
+    <string name="valor">Valor:</string>
+    <string name="qtd">Quantidade:</string>
+    <string name="concluir">Concluir</string>
+
+
 </resources>
