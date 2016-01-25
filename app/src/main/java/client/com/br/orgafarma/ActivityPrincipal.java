@@ -104,11 +104,11 @@ public class ActivityPrincipal extends AppCompatActivity {
                                 drawerLayout.closeDrawer(GravityCompat.START);
                                 return true;
 
-                            case R.id.navigation_cotacao:
+                            /*case R.id.navigation_cotacao:
                                 menuItem.setChecked(true);
                                 setFragment(R.id.navigation_cotacao);
                                 drawerLayout.closeDrawer(GravityCompat.START);
-                                return true;
+                                return true;*/
 
                         }
                         return true;
@@ -134,11 +134,11 @@ public class ActivityPrincipal extends AppCompatActivity {
                 fragmentTransaction.replace(R.id.fragment, fragment);
                 fragmentTransaction.commit();
                 break;
-            case R.id.navigation_cotacao:
+            /*case R.id.navigation_cotacao:
                 CotacaoFragment cotacaoFragment = new CotacaoFragment();
                 fragmentTransaction.replace(R.id.fragment, cotacaoFragment);
                 fragmentTransaction.commit();
-                break;
+                break;*/
 
         }
     }

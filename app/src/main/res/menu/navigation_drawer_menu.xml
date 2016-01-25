@@ -4,10 +4,7 @@
 
     <group
         android:checkableBehavior="single">
-        <item
-            android:id="@+id/navigation_cotacao"
-            android:title="@string/cotacao">
-        </item>
+
 
         <item
             android:id="@+id/navigation_subheader"
