@@ -1,74 +1,55 @@
 package client.com.br.orgafarma.Modal;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+import java.util.List;
+
 /**
- * Created by Felipe on 20/11/2015.
+ * Created by rodolfo.rezende on 18/01/2016.
  */
-public class VendaMes {
+public class VendaMes implements Serializable {
+    @SerializedName("Vendedor")
+    private String vendedor;
 
-    private String pacote;
-    private String meta;
-    private String venda;
-    private String COB;
-    private String projecao;
-    private String vazio;
+    @SerializedName("Mes")
+    private List<Mes> mes;
 
-    public VendaMes() {
+    @SerializedName("Logistica")
+    private List<Logistica> logistica;
+
+    @SerializedName("Positivados")
+    private List<Positivacao> positivados;
+
+    public String getVendedor() {
+        return vendedor;
     }
 
-    public VendaMes(String pacote, String meta, String venda, String COB, String projecao, String vazio) {
-        this.pacote = pacote;
-        this.meta = meta;
-        this.venda = venda;
-        this.COB = COB;
-        this.projecao = projecao;
-        this.vazio = vazio;
+    public void setVendedor(String vendedor) {
+        this.vendedor = vendedor;
     }
 
-    public String getPacote() {
-        return pacote;
+    public List<Mes> getMes() {
+        return mes;
     }
 
-    public void setPacote(String pacote) {
-        this.pacote = pacote;
+    public void setMes(List<Mes> mes) {
+        this.mes = mes;
     }
 
-    public String getMeta() {
-        return meta;
+    public List<Logistica> getLogistica() {
+        return logistica;
     }
 
-    public void setMeta(String meta) {
-        this.meta = meta;
+    public void setLogistica(List<Logistica> logistica) {
+        this.logistica = logistica;
     }
 
-    public String getVenda() {
-        return venda;
+    public List<Positivacao> getPositivados() {
+        return positivados;
     }
 
-    public void setVenda(String venda) {
-        this.venda = venda;
-    }
-
-    public String getCOB() {
-        return COB;
-    }
-
-    public void setCOB(String COB) {
-        this.COB = COB;
-    }
-
-    public String getProjecao() {
-        return projecao;
-    }
-
-    public void setProjecao(String projecao) {
-        this.projecao = projecao;
-    }
-
-    public String getVazio() {
-        return vazio;
-    }
-
-    public void setVazio(String vazio) {
-        this.vazio = vazio;
+    public void setPositivados(List<Positivacao> positivados) {
+        this.positivados = positivados;
     }
 }

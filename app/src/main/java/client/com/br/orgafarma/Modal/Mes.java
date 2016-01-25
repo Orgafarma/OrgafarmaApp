@@ -2,26 +2,21 @@ package client.com.br.orgafarma.Modal;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
-
 /**
- * Created by Felipe on 25/11/2015.
+ * Created by rodolfo.rezende on 18/01/2016.
  */
-public class Positivacao implements Serializable {
+public class Mes {
 
-    @SerializedName("BaseClientes")
-    private String baseClientes;
+    @SerializedName("Venda")
+    private String venda;
 
     @SerializedName("Meta")
     private String meta;
 
-    @SerializedName("Positivados")
-    private String positivados;
-
     @SerializedName("COB")
     private String cob;
 
-    @SerializedName("projecao")
+    @SerializedName("Projecao")
     private String projecao;
 
     @SerializedName("Vazio")
@@ -30,31 +25,12 @@ public class Positivacao implements Serializable {
     @SerializedName("Pacote")
     private String pacote;
 
-    @SerializedName("VendaMes")
-    private String venda;
-
-    public String getBaseClientes() {
-        return baseClientes;
-    }
-
-    public void setBaseClientes(String baseClientes) {
-        this.baseClientes = baseClientes;
-    }
-
     public String getMeta() {
         return meta;
     }
 
     public void setMeta(String meta) {
         this.meta = meta;
-    }
-
-    public String getPositivados() {
-        return positivados;
-    }
-
-    public void setPositivados(String positivados) {
-        this.positivados = positivados;
     }
 
     public String getCob() {
@@ -80,4 +56,21 @@ public class Positivacao implements Serializable {
     public void setVazio(String vazio) {
         this.vazio = vazio;
     }
+
+    public String getPacote() {
+        return pacote;
+    }
+
+    public void setPacote(String pacote) {
+        this.pacote = pacote;
+    }
+
+    public String getVenda() {
+        return venda;
+    }
+
+    public void setVenda(String venda) {
+        this.venda = venda;
+    }
+
 }

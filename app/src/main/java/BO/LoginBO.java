@@ -43,7 +43,6 @@ public class LoginBO {
                 validacao.setMensagem(context.getString(R.string.msg_login_invalido));
             }
         }
-
         return validacao;
     }
 

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -15,25 +14,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import org.json.JSONArray;
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
+import java.util.List;
 
 import BO.VendasBO;
-import Util.MensagemUtil;
 import client.com.br.orgafarma.ActivityPrincipal;
-import client.com.br.orgafarma.Modal.Positivacao;
+import client.com.br.orgafarma.Modal.Logistica;
+import client.com.br.orgafarma.Modal.Mes;
 import client.com.br.orgafarma.Modal.PrevisaoVenda;
-import client.com.br.orgafarma.Modal.VendaMes;
-import client.com.br.orgafarma.Modal.Vendedor;
 import client.com.br.orgafarma.R;
 
 
@@ -45,10 +42,9 @@ public class InboxFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_inbox, container, false);
 
-        ((ActivityPrincipal) getActivity()).getSupportActionBar().setTitle("Venda do Mês");
+        ((ActivityPrincipal) getActivity()).getSupportActionBar().setTitle("VendaMes do Mês");
 
         new LoadingAsync(getActivity(), view).execute();
-
 
         return view;
     }
@@ -77,62 +73,11 @@ public class InboxFragment extends Fragment {
 
         @Override
         protected PrevisaoVenda doInBackground(Void... params) {
-            PrevisaoVenda previsaoVenda = new PrevisaoVenda();
+            Gson gson = new Gson();
+            PrevisaoVenda previsaoVenda;
 
             try {
-                JSONObject jsonObject = new JSONObject(VendasBO.listaPrevisaoVenda());
-
-                JSONObject vendas = jsonObject.getJSONObject("Vendas");
-
-
-                JSONArray positivados = vendas.getJSONArray("Positivados");
-                Positivacao positivacao = new Positivacao();
-
-                for(int i=0; i < positivados.length(); i++){
-                    positivacao.setBaseClientes(positivados.getJSONObject(i).getString("BaseClientes"));
-                    positivacao.setMeta(positivados.getJSONObject(i).getString("Meta"));
-                    positivacao.setPositivados(positivados.getJSONObject(i).getString("Positivados"));
-                    positivacao.setCOB(positivados.getJSONObject(i).getString("COB"));
-                    positivacao.setProjecao(positivados.getJSONObject(i).getString("Projecao"));
-                    positivacao.setVazio(positivados.getJSONObject(i).getString("Vazio"));
-                }
-
-                previsaoVenda.setPositivacao(positivacao);
-
-                JSONArray mes = vendas.getJSONArray("Mes");
-
-                previsaoVenda.setListaVendaMes(new ArrayList<VendaMes>());
-
-                for (int j = 0; j < mes.length(); j++) {
-                    VendaMes vendaMes = new VendaMes();
-                    vendaMes.setPacote(mes.getJSONObject(j).getString("Pacote"));
-                    vendaMes.setMeta(mes.getJSONObject(j).getString("Meta"));
-                    vendaMes.setVenda(mes.getJSONObject(j).getString("Venda"));
-                    vendaMes.setCOB(mes.getJSONObject(j).getString("COB"));
-                    vendaMes.setProjecao(mes.getJSONObject(j).getString("Projecao"));
-                    vendaMes.setVazio(mes.getJSONObject(j).getString("Vazio"));
-
-                    previsaoVenda.getListaVendaMes().add(vendaMes);
-                }
-
-                JSONArray mesLogistica = vendas.getJSONArray("Logistica");
-                previsaoVenda.setListaVendaMesLogistica(new ArrayList<VendaMes>());
-                for (int j = 0; j < mesLogistica.length(); j++) {
-                    VendaMes vendaMes = new VendaMes();
-                    vendaMes.setPacote(mesLogistica.getJSONObject(j).getString("Pacote"));
-                    vendaMes.setMeta(mesLogistica.getJSONObject(j).getString("Meta"));
-                    vendaMes.setVenda(mesLogistica.getJSONObject(j).getString("Venda"));
-                    vendaMes.setCOB(mesLogistica.getJSONObject(j).getString("COB"));
-                    vendaMes.setProjecao(mesLogistica.getJSONObject(j).getString("Projecao"));
-                    vendaMes.setVazio(mesLogistica.getJSONObject(j).getString("Vazio"));
-
-                    previsaoVenda.getListaVendaMesLogistica().add(vendaMes);
-                }
-
-                Vendedor vendedor = new Vendedor();
-                vendedor.setNome(jsonObject.getJSONObject("Vendas").getString("Vendedor"));
-                previsaoVenda.setVendedor(vendedor);
-
+                previsaoVenda = gson.fromJson( new JSONObject(VendasBO.listaPrevisaoVenda()).toString(), PrevisaoVenda.class );
             } catch (JSONException e) {
                 Log.i("ERRO", e.getMessage());
                 return  null;
@@ -162,31 +107,35 @@ public class InboxFragment extends Fragment {
                 addLinhaPositivacao(params);
 
                 TableRow tableRowPos = new TableRow(mContext);
-                adicionaTextViewLinha(tableRowPos, params, previsaoVenda.getPositivacao().getBaseClientes(), false, 0);
-                adicionaTextViewLinha(tableRowPos,params, previsaoVenda.getPositivacao().getMeta(), false, 0);
-                adicionaTextViewLinha(tableRowPos,params, previsaoVenda.getPositivacao().getPositivados(), false, 0);
-                adicionaTextViewLinha(tableRowPos,params, previsaoVenda.getPositivacao().getCOB(), false, 0);
-                adicionaTextViewLinha(tableRowPos,params, previsaoVenda.getPositivacao().getProjecao(), false, 0);
-                adicionaTextViewLinha(tableRowPos,params, previsaoVenda.getPositivacao().getVazio(), false, 0);
+                adicionaTextViewLinha(tableRowPos, params, previsaoVenda.getVenda().getPositivados().get(0).getBaseClientes(), false, 0);
+                adicionaTextViewLinha(tableRowPos,params, previsaoVenda.getVenda().getPositivados().get(0).getMeta(), false, 0);
+                adicionaTextViewLinha(tableRowPos,params, previsaoVenda.getVenda().getPositivados().get(0).getPositivados(), false, 0);
+                adicionaTextViewLinha(tableRowPos,params, previsaoVenda.getVenda().getPositivados().get(0).getCob(), false, 0);
+                adicionaTextViewLinha(tableRowPos,params, previsaoVenda.getVenda().getPositivados().get(0).getProjecao(), false, 0);
+                adicionaTextViewLinha(tableRowPos, params, previsaoVenda.getVenda().getPositivados().get(0).getVazio(), false, 0);
 
                 stkPositivacao.addView(tableRowPos);
 
                 TextView txtNomeVendedor = (TextView) rootView.findViewById(R.id.txtVendedor);
-                txtNomeVendedor.setText(previsaoVenda.getVendedor().getNome());
+                txtNomeVendedor.setText(previsaoVenda.getVenda().getVendedor());
 
-                for (int i = 0; i < previsaoVenda.getListaVendaMes().size(); i++) {
+
+                List<Mes> meses =  previsaoVenda.getVenda().getMes();
+                for (int i = 0; i < meses.size(); i++) {
+                    Mes mes =  meses.get(i);
+
                     params.setMargins(0, 10, 0, 0);
                     TableRow tbrow = new TableRow(mContext);;
 
-                    adicionaTextViewLinha(tbrow,params, previsaoVenda.getListaVendaMes().get(i).getPacote(), false, 0);
-                    adicionaTextViewLinha(tbrow, params, previsaoVenda.getListaVendaMes().get(i).getMeta(), false, 0);
-                    adicionaTextViewLinha(tbrow,params, previsaoVenda.getListaVendaMes().get(i).getVenda(), false, 0);
-                    adicionaTextViewLinha(tbrow,params, previsaoVenda.getListaVendaMes().get(i).getCOB(), false, 0);
-                    adicionaTextViewLinha(tbrow, params, previsaoVenda.getListaVendaMes().get(i).getProjecao(), false, 0);
+                    adicionaTextViewLinha(tbrow,params, mes.getPacote(), false, 0);
+                    adicionaTextViewLinha(tbrow, params, mes.getMeta(), false, 0);
+                    adicionaTextViewLinha(tbrow,params, mes.getVenda(), false, 0);
+                    adicionaTextViewLinha(tbrow,params,mes.getCob(), false, 0);
+                    adicionaTextViewLinha(tbrow, params, mes.getProjecao(), false, 0);
 
                     ImageView view = new ImageView(mContext);
 
-                    double vazio = Double.parseDouble(previsaoVenda.getListaVendaMes().get(i).getVazio());
+                    double vazio = Double.parseDouble(mes.getVazio());
 
                     if(vazio <= 100.00) {
                         view.setImageResource(R.drawable.status_fail);
@@ -196,13 +145,13 @@ public class InboxFragment extends Fragment {
 
                     adicionaImageViewLinha(tbrow, params, view, false, 0);
 
-                    adicionaTextViewLinha(tbrow, params, previsaoVenda.getListaVendaMes().get(i).getVazio() + "%", false, 0);
+                    adicionaTextViewLinha(tbrow, params, mes.getVazio() + "%", false, 0);
 
 
-                    totalMeta +=  Integer.parseInt(previsaoVenda.getListaVendaMes().get(i).getMeta());
-                    totalVenda +=  Double.parseDouble(previsaoVenda.getListaVendaMes().get(i).getVenda());
-                    totalCOB +=  Double.parseDouble(previsaoVenda.getListaVendaMes().get(i).getCOB());
-                    totalProjecao +=  Double.parseDouble(previsaoVenda.getListaVendaMes().get(i).getProjecao());
+                    totalMeta +=  Integer.parseInt(mes.getMeta());
+                    totalVenda +=  Double.parseDouble(mes.getVenda());
+                    totalCOB +=  Double.parseDouble(mes.getCob());
+                    totalProjecao +=  Double.parseDouble(mes.getProjecao());
                     //totalVazio +=  Double.parseDouble(previsaoVenda.getListaVendaMes().get(i).getVazio());
 
                     stk.addView(tbrow);
@@ -223,7 +172,7 @@ public class InboxFragment extends Fragment {
                 totalVazio = Double.parseDouble(total);
 
 
-                adicionaTotaisVendaDireta(params,totalMeta,totalVenda,totalCOB,totalProjecao,totalVazio,stk,"Venda Direta");
+                adicionaTotaisVendaDireta(params,totalMeta,totalVenda,totalCOB,totalProjecao,totalVazio,stk,"VendaMes Direta");
 
                 totalMeta = 0;
                 totalVenda = 0;
@@ -231,22 +180,26 @@ public class InboxFragment extends Fragment {
                 totalProjecao = 0;
                 totalVazio = 0;
 
-                for (int i = 0; i < previsaoVenda.getListaVendaMesLogistica().size(); i++) {
+
+                List<Logistica> logisticas = previsaoVenda.getVenda().getLogistica();
+                for (int i = 0; i < logisticas.size(); i++) {
+                    Logistica log = logisticas.get(i);
+
                     params.setMargins(0, 10, 0, 0);
                     TableRow tbrow = new TableRow(mContext);
 
-                    adicionaTextViewLinha(tbrow, params, previsaoVenda.getListaVendaMesLogistica().get(i).getPacote(), false, 0);
-                    adicionaTextViewLinha(tbrow,params, previsaoVenda.getListaVendaMesLogistica().get(i).getMeta(), false, 0);
-                    adicionaTextViewLinha(tbrow,params, previsaoVenda.getListaVendaMesLogistica().get(i).getVenda(), false, 0);
-                    adicionaTextViewLinha(tbrow,params, previsaoVenda.getListaVendaMesLogistica().get(i).getCOB(), false, 0);
-                    adicionaTextViewLinha(tbrow,params, previsaoVenda.getListaVendaMesLogistica().get(i).getProjecao(), false, 0);
-                    adicionaTextViewLinha(tbrow,params, previsaoVenda.getListaVendaMesLogistica().get(i).getVazio(), false, 0);
+                    adicionaTextViewLinha(tbrow, params, log.getPacote(), false, 0);
+                    adicionaTextViewLinha(tbrow,params, log.getMeta(), false, 0);
+                    adicionaTextViewLinha(tbrow,params, log.getVenda(), false, 0);
+                    adicionaTextViewLinha(tbrow,params, log.getCob(), false, 0);
+                    adicionaTextViewLinha(tbrow,params, log.getProjecao(), false, 0);
+                    adicionaTextViewLinha(tbrow,params, log.getVazio(), false, 0);
 
-                    totalMeta += Integer.parseInt(previsaoVenda.getListaVendaMesLogistica().get(i).getMeta());
-                    totalVenda +=  Double.parseDouble(previsaoVenda.getListaVendaMesLogistica().get(i).getVenda());
-                    totalCOB += Double.parseDouble(previsaoVenda.getListaVendaMesLogistica().get(i).getCOB());
-                    totalProjecao += Double.parseDouble(previsaoVenda.getListaVendaMesLogistica().get(i).getProjecao());
-                    totalVazio += Double.parseDouble(previsaoVenda.getListaVendaMesLogistica().get(i).getVazio());
+                    totalMeta += Integer.parseInt(log.getMeta());
+                    totalVenda +=  Double.parseDouble(log.getVenda());
+                    totalCOB += Double.parseDouble(log.getCob());
+                    totalProjecao += Double.parseDouble(log.getProjecao());
+                    totalVazio += Double.parseDouble(log.getVazio());
 
                     stk.addView(tbrow);
                 }
@@ -270,7 +223,7 @@ public class InboxFragment extends Fragment {
 
             adicionaTextViewLinha(tbrow0, params, "Pacote", false, 16f);
             adicionaTextViewLinha(tbrow0, params, "Meta", false, 16f);
-            adicionaTextViewLinha(tbrow0, params, "Venda", false, 16f);
+            adicionaTextViewLinha(tbrow0, params, "VendaMes", false, 16f);
             adicionaTextViewLinha(tbrow0, params, "%COB", false, 16f);
             adicionaTextViewLinha(tbrow0, params, "Projeção", false, 16f);
             adicionaTextViewLinha(tbrow0, params, "", false, 16f);

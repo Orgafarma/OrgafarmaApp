@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
-    <group android:checkableBehavior="single">
+    <group
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_cotacao"
+            android:title="@string/cotacao">
+        </item>
+
         <item
             android:id="@+id/navigation_subheader"
             android:title="Vendas">

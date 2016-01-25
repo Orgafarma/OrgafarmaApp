@@ -7,4 +7,6 @@
     <dimen name="padding_small">30dp</dimen>
     <dimen name="padding_minimum">10dp</dimen>
     <dimen name="margin_bottom_small">10dp</dimen>
+
+    <dimen name="normal_txt_size">30sp</dimen>
 </resources>
