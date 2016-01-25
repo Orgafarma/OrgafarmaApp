@@ -4,8 +4,6 @@
 
     <group
         android:checkableBehavior="single">
-
-
         <item
             android:id="@+id/navigation_subheader"
             android:title="Vendas">
