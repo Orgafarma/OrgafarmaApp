@@ -78,7 +78,6 @@ public class CotacaoFragment extends Fragment {
                 }
             }
         });
-
     }
 
     private void setLists(ExpandableListView list){

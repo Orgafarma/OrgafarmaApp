@@ -2,10 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     >
 
+    <item
+        android:id="@+id/navigation_cotacao"
+        android:title="@string/cotacao"
+        ></item>
     <group
         android:checkableBehavior="single">
+
         <item
             android:id="@+id/navigation_subheader"
+            android:icon="@drawable/ic_description_black_24dp"
             android:title="Vendas">
             <menu>
                 <item

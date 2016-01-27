@@ -25,7 +25,6 @@ import client.com.br.orgafarma.Fragment.CotacaoFragment;
 import client.com.br.orgafarma.Fragment.InboxFragment;
 import client.com.br.orgafarma.Fragment.InboxVendaVendedorFragment;
 
-
 public class ActivityPrincipal extends AppCompatActivity {
 
     DrawerLayout drawerLayout;
@@ -93,22 +92,19 @@ public class ActivityPrincipal extends AppCompatActivity {
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.navigation_sub_item_1:
-                                /*menuItem.setChecked(true);*/
                                 setFragment(R.id.navigation_sub_item_1);
                                 drawerLayout.closeDrawer(GravityCompat.START);
                                 return true;
 
                             case R.id.navigation_sub_item_2:
-                                /*menuItem.setChecked(true);*/
                                 setFragment(R.id.navigation_sub_item_2);
                                 drawerLayout.closeDrawer(GravityCompat.START);
                                 return true;
 
-                            /*case R.id.navigation_cotacao:
-                                menuItem.setChecked(true);
+                            case R.id.navigation_cotacao:
                                 setFragment(R.id.navigation_cotacao);
                                 drawerLayout.closeDrawer(GravityCompat.START);
-                                return true;*/
+                                return true;
 
                         }
                         return true;
@@ -134,17 +130,12 @@ public class ActivityPrincipal extends AppCompatActivity {
                 fragmentTransaction.replace(R.id.fragment, fragment);
                 fragmentTransaction.commit();
                 break;
-            /*case R.id.navigation_cotacao:
+            case R.id.navigation_cotacao:
                 CotacaoFragment cotacaoFragment = new CotacaoFragment();
                 fragmentTransaction.replace(R.id.fragment, cotacaoFragment);
                 fragmentTransaction.commit();
-                break;*/
-
+                break;
         }
-    }
-
-    private void setConclurOn(){
-
     }
 }
 
