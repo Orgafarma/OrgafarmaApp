@@ -1,5 +1,7 @@
 package BO;
 
+import android.content.Context;
+
 import Util.WebServiceUtil;
 
 /**
@@ -7,11 +9,15 @@ import Util.WebServiceUtil;
  */
 public class VendasBO {
 
-    public static String listaPrevisaoVenda(){
-        return WebServiceUtil.listaPrevisaoVenda();
+    public static String listaPrevisaoVenda(Context ctx){
+        return WebServiceUtil.listaPrevisaoVenda(ctx);
     }
 
-    public static String listaVendaVendedorTelevendas(){
-        return WebServiceUtil.listaVendaVendedorTelevendas();
+    public static String listaVendaVendedorTelevendas(Context ctx){
+        return WebServiceUtil.listaVendaVendedorTelevendas(ctx);
+    }
+
+    public static String listaProdutoCotacao(){
+        return WebServiceUtil.getProdutoCotacao();
     }
 }

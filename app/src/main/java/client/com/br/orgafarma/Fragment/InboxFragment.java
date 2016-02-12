@@ -49,8 +49,6 @@ public class InboxFragment extends Fragment {
         return view;
     }
 
-
-
     private class LoadingAsync extends AsyncTask<Void, Void, PrevisaoVenda> {
 
         ProgressDialog progressDialog = new ProgressDialog(getActivity());
@@ -77,7 +75,7 @@ public class InboxFragment extends Fragment {
             PrevisaoVenda previsaoVenda;
 
             try {
-                previsaoVenda = gson.fromJson( new JSONObject(VendasBO.listaPrevisaoVenda()).toString(), PrevisaoVenda.class );
+                previsaoVenda = gson.fromJson( new JSONObject(VendasBO.listaPrevisaoVenda(getContext())).toString(), PrevisaoVenda.class );
             } catch (JSONException e) {
                 Log.i("ERRO", e.getMessage());
                 return  null;

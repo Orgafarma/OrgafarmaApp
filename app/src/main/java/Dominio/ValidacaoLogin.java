@@ -18,6 +18,31 @@ public class ValidacaoLogin implements Serializable{
     @SerializedName("token")
     private String token;
 
+    @SerializedName("mensagem")
+    private String mensagem;
+
+    @SerializedName("id_representante")
+    private int idRepresentante;
+
+    @SerializedName("codigo_representante")
+    private int codRepresentante;
+
+    public int getIdRepresentante() {
+        return idRepresentante;
+    }
+
+    public void setIdRepresentante(int idRepresentante) {
+        this.idRepresentante = idRepresentante;
+    }
+
+    public int getCodRepresentante() {
+        return codRepresentante;
+    }
+
+    public void setCodRepresentante(int codRepresentante) {
+        this.codRepresentante = codRepresentante;
+    }
+
     public String getToken() {
         return token;
     }
@@ -25,9 +50,6 @@ public class ValidacaoLogin implements Serializable{
     public void setToken(String token) {
         this.token = token;
     }
-
-    @SerializedName("mensagem")
-    private String mensagem;
 
     public boolean isValido() {
         return valido;

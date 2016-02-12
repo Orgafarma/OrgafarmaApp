@@ -48,7 +48,7 @@
             android:drawablePadding="@dimen/padding_minimum"
             android:drawableStart="@drawable/ic_account_grey600_24dp"
             android:inputType="text"
-            android:text="rodolfo.rezende"
+            android:text="milton.araujo"
             />
 
         <TextView
@@ -67,7 +67,7 @@
             android:drawablePadding="@dimen/padding_minimum"
             android:drawableStart="@drawable/ic_lock_outline_grey600_24dp"
             android:inputType="textPassword"
-            android:text="Rodolfo556556$"/>
+            android:text="945825306-30"/>
 
         <Button
             android:id="@+id/button_send"

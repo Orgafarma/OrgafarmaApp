@@ -16,13 +16,15 @@
     <string name="msg_login_invalido">Usuário ou Senha inválidos</string>
 
     <!-- fragment cotação -->
-    <string name="produto">Produto:</string>
+    <string name="produto">Produto</string>
     <string name="add">Adicionar</string>
     <string name="cotacao">Cotação</string>
-    <string name="valor">Valor:</string>
-    <string name="qtd">Quantidade:</string>
+    <string name="valor">Valor</string>
+    <string name="qtd">Quantidade</string>
     <string name="concluir">Concluir</string>
     <string name="items">Itens</string>
+    <string name="generico">Aceito genérico deste remédio</string>
+    <string name="campo_vazio">O campo descrição está vazio</string>
 
 
 </resources>

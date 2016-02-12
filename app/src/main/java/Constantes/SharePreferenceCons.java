@@ -9,5 +9,11 @@ public class SharePreferenceCons {
         public static String LOGIN = "login";
         public static String SENHA = "senha";
         public static String TOKEN = "token";
+        public static String REPRESENTANTE_ID = "id_representante";
+        public static String REPRESENTANTE_COD = "codigo_representante";
+    }
+
+    public static class Comuns{
+
     }
 }

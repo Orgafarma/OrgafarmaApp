@@ -5,6 +5,7 @@
     <item
         android:id="@+id/navigation_cotacao"
         android:title="@string/cotacao"
+        android:icon="@drawable/ic_assessment_black_24dp"
         ></item>
     <group
         android:checkableBehavior="single">
@@ -25,6 +26,4 @@
             </menu>
         </item>
     </group>
-
-
 </menu>

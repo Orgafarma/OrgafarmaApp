@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="40dp"
+    android:padding="10dp"
     tools:context=".Fragment.CotacaoFragment">
 
     <LinearLayout
@@ -29,8 +29,9 @@
             android:background="@android:drawable/editbox_background"
             android:hint="Digite a descrição do produto"
             android:inputType="textAutoComplete"
-            android:padding="15dp" />
-
+            android:padding="15dp"
+            android:selectAllOnFocus="true"
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -57,6 +58,8 @@
             android:hint="Valor"
             android:inputType="number"
             android:padding="15dp"
+            android:gravity="center"
+            android:selectAllOnFocus="true"
             />
 
         <TextView
@@ -97,6 +100,8 @@
                 android:maxWidth="150dp"
                 android:padding="15dp"
                 android:maxLength="5"
+                android:gravity="center"
+                android:selectAllOnFocus="true"
                 />
 
             <ImageView
@@ -109,23 +114,19 @@
                 android:tint="#000" />
         </LinearLayout>
 
+        <com.rey.material.widget.CheckBox
+            android:id="@+id/AceitaGenerico"
+            style="@style/Material.Drawable.CheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:gravity="center"
+            android:text="@string/generico"/>
+
     </LinearLayout>
 
     <com.rey.material.widget.Button
-        android:id="@+id/items"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/rounded_with_corner_black"
-        android:padding="15dp"
-        android:text="@string/items"
-        android:textAllCaps="false"
-        android:textColor="@color/md_grey_900"
-        app:rd_enable="true" />
-
-    <com.rey.material.widget.Button
+        android:id="@+id/add_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
@@ -150,7 +151,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/rounded_with_corner"
             android:padding="5dp"
-            android:layout_above="@+id/concluir_btn"
+            android:layout_above="@+id/total"
             >
 
             <LinearLayout
@@ -161,23 +162,92 @@
                     android:id="@+id/list_produto"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_weight="4"
+                    android:transcriptMode="alwaysScroll"
+                    android:stackFromBottom="true"/>
 
                 <helperClass.ExpandableListView
                     android:id="@+id/list_valor"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:transcriptMode="alwaysScroll"
+                    android:stackFromBottom="true"
+                    />
 
                 <helperClass.ExpandableListView
                     android:id="@+id/list_qtd"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:transcriptMode="alwaysScroll"
+                    android:stackFromBottom="true"
+                    />
 
             </LinearLayout>
         </ScrollView>
 
+        <LinearLayout
+            android:background="@drawable/rounded_with_corner"
+            android:layout_above="@+id/concluir_btn"
+            android:id="@+id/total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:gravity="right"
+            android:padding="10dp"
+            >
+
+            <TextView
+                android:id="@+id/qtd"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Valor: "
+                android:layout_alignParentRight="true"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                />
+
+            <TextView
+                android:id="@+id/vlrTotal"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="0"
+                android:layout_alignParentRight="true"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:layout_marginRight="40dp"
+                />
+
+            <View android:layout_height="match_parent"
+                android:layout_width="2dp"
+                android:background="@color/md_blue_100"
+                android:layout_marginRight="40dp"/>
+
+            <TextView
+                android:id="@+id/qtd2"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Quantidade: "
+                android:layout_alignParentRight="true"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="20dp"/>
+
+            <TextView
+                android:id="@+id/qtdTotal"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="0"
+                android:layout_alignParentRight="true"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                />
+
+        </LinearLayout>
 
         <com.rey.material.widget.Button
             android:id="@+id/concluir_btn"
@@ -187,7 +257,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/rounded_with_corner_black"
-            android:padding="15dp"
+            android:padding="5dp"
             android:text="@string/concluir"
             android:textAllCaps="false"
             android:textColor="@color/black"

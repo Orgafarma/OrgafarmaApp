@@ -13,6 +13,11 @@ import android.widget.TextView;
 
 import org.ksoap2.SoapFault;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
 import BO.LoginBO;
 import Constantes.SharePreferenceCons;
 import Dominio.ValidacaoLogin;
@@ -33,9 +38,11 @@ public class LoginActivity extends AppCompatActivity {
     private String username,password;
     private Boolean saveLogin;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login);
 
         edtlogin = (EditText) findViewById(R.id.edt_usuario);
@@ -56,11 +63,6 @@ public class LoginActivity extends AppCompatActivity {
         }
 
     }
-
-    private void saveToken(){
-
-    }
-
 
     public void logar(View view) {
         new LodingAsync().execute();
@@ -97,9 +99,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(ValidacaoLogin validacao) {
-
             progressDialog.dismiss();
-
             if (validacao.isValido()) {
                 if(saveLoginCheckBox.isChecked()){
                     username = edtlogin.getText().toString();
@@ -108,15 +108,18 @@ public class LoginActivity extends AppCompatActivity {
                     loginPrefsEditor.putString(SharePreferenceCons.Login.LOGIN, username);
                     loginPrefsEditor.putString(SharePreferenceCons.Login.SENHA, password);
                     loginPrefsEditor.putString(SharePreferenceCons.Login.TOKEN, validacao.getToken());
+                    loginPrefsEditor.putString(SharePreferenceCons.Login.REPRESENTANTE_ID, validacao.getIdRepresentante() + "");
+                    loginPrefsEditor.putString(SharePreferenceCons.Login.REPRESENTANTE_COD, validacao.getCodRepresentante() + "");
                     OrgafarmaApplication.TOKEN = validacao.getToken();
                     loginPrefsEditor.commit();
                 }
                 else {
                     OrgafarmaApplication.TOKEN = validacao.getToken();
                     loginPrefsEditor.clear();
+                    loginPrefsEditor.putString(SharePreferenceCons.Login.REPRESENTANTE_ID, validacao.getIdRepresentante() + "");
+                    loginPrefsEditor.putString(SharePreferenceCons.Login.REPRESENTANTE_COD, validacao.getCodRepresentante() + "");
                     loginPrefsEditor.commit();
                 }
-
                 Intent i = new Intent(LoginActivity.this, ActivityPrincipal.class);
                 i.putExtra("msg", validacao.getMensagem());
                 startActivity(i);
@@ -137,9 +140,7 @@ public class LoginActivity extends AppCompatActivity {
                     edtlogin.setError("Preencher o campo");
                     edtSenha.setError("Preencher o campo");
                 }
-
             }
         }
-
     }
 }

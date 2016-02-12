@@ -76,7 +76,7 @@ public class InboxVendaVendedorFragment extends Fragment {
             VendaTelevenda vendaTelevenda;
             Gson gson = new Gson();
             try {
-                vendaTelevenda = gson.fromJson(new JSONObject(VendasBO.listaVendaVendedorTelevendas()).toString(), VendaTelevenda.class);
+                vendaTelevenda = gson.fromJson(new JSONObject(VendasBO.listaVendaVendedorTelevendas(getContext())).toString(), VendaTelevenda.class);
             } catch (JSONException e) {
                 Log.i("ERRO", e.getMessage());
                 return null;
