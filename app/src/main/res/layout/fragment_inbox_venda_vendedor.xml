@@ -78,6 +78,7 @@
                         android:textSize="20sp" />
 
                     <TextView
+                        android:id="@+id/dia_do_mes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="13"
@@ -100,6 +101,7 @@
                         android:textSize="16sp" />
 
                     <TextView
+                        android:id="@+id/mes_descricao"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Novembro"
@@ -119,6 +121,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Pacote"
+                        android:paddingLeft="15dp"
                         android:textSize="16sp"
                         android:layout_gravity="center_horizontal"/>
 
@@ -126,6 +129,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Vendedor"
+                        android:paddingLeft="15dp"
                         android:textSize="16sp"
                         android:layout_gravity="center_horizontal"/>
 
@@ -134,6 +138,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_weight="1"
                         android:text="Televendas"
+                        android:paddingLeft="15dp"
                         android:textSize="16sp"
                         android:background="@color/md_orange_200"/>
 
