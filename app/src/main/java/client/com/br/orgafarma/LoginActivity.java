@@ -115,7 +115,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else {
                     OrgafarmaApplication.TOKEN = validacao.getToken();
-                    loginPrefsEditor.clear();
+
+
                     loginPrefsEditor.putString(SharePreferenceCons.Login.REPRESENTANTE_ID, validacao.getIdRepresentante() + "");
                     loginPrefsEditor.putString(SharePreferenceCons.Login.REPRESENTANTE_COD, validacao.getCodRepresentante() + "");
                     loginPrefsEditor.commit();

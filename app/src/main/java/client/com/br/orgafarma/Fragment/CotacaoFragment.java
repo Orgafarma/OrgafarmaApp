@@ -180,7 +180,11 @@ public class CotacaoFragment extends Fragment {
     }
 
     private void deleteItemOnLists(int index){
-        mCotacoesEnvio.remove(index);
+        CotacaoEnvio aux = mCotacoesEnvio.remove(index);
+        if (aux.getmProduto().equals(mDescricao.getText().toString())){
+            mValor.setEnabled(true);
+        }
+
         CotacaoEnvio excluido = CotacaoAdapter.deleteItem(index);
         int qtd = excluido.getmQtd();
         int valor = excluido.getmValor();
