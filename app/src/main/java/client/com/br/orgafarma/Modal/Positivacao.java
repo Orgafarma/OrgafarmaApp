@@ -21,7 +21,7 @@ public class Positivacao implements Serializable {
     @SerializedName("COB")
     private String cob;
 
-    @SerializedName("projecao")
+    @SerializedName("Projecao")
     private String projecao;
 
     @SerializedName("Vazio")

@@ -24,7 +24,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 import BO.VendasBO;
 import client.com.br.orgafarma.ActivityPrincipal;
@@ -90,6 +93,19 @@ public class InboxVendaVendedorFragment extends Fragment {
             int totalTelevendas = 0;
 
             if (previsaoVenda != null) {
+                Calendar c = Calendar.getInstance();
+                int dia = c.get(Calendar.DAY_OF_MONTH);
+
+                Calendar cal=Calendar.getInstance();
+                SimpleDateFormat month_date = new SimpleDateFormat("MMMM", new Locale("pt", "BR"));
+                String month_name = month_date.format(cal.getTime());
+
+                TextView txtDia = (TextView) rootView.findViewById(R.id.dia_do_mes);
+                TextView txtMes = (TextView) rootView.findViewById(R.id.mes_descricao);
+
+                txtDia.setText(Integer.toString(dia));
+                txtMes.setText(month_name);
+
                 TableLayout stk = (TableLayout) rootView.findViewById(R.id.tableLayoutVendaVendedor);
                 TableLayout stkPrazo = (TableLayout) rootView.findViewById(R.id.tableLayoutPrazo);
 
@@ -187,6 +203,7 @@ public class InboxVendaVendedorFragment extends Fragment {
                 textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
             }
 
+            tableRow.setPadding(10, 0, 10, 0);
             tableRow.addView(textView);
         }
 

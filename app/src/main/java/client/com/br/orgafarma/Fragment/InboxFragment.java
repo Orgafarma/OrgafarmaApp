@@ -156,6 +156,7 @@ public class InboxFragment extends Fragment {
                 }
 
                 DecimalFormat df = new DecimalFormat("0.##");
+
                 String total = df.format(totalVenda);
                 total = total.replace(",", ".");
                 totalVenda = Double.parseDouble(total);
@@ -169,6 +170,9 @@ public class InboxFragment extends Fragment {
                 total = total.replace(",", ".");
                 totalVazio = Double.parseDouble(total);
 
+                total = df.format(totalCOB);
+                total = total.replace(",", ".");
+                totalCOB = Double.parseDouble(total);
 
                 adicionaTotaisVendaDireta(params,totalMeta,totalVenda,totalCOB,totalProjecao,totalVazio,stk,"VendaMes Direta");
 
