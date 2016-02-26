@@ -25,6 +25,17 @@
     <string name="items">Itens</string>
     <string name="generico">Aceito genérico deste remédio</string>
     <string name="campo_vazio">O campo descrição está vazio</string>
+    <string name="produto_nao_cadastrado">Produto não cadastrado</string>
+    <string name="cotacao_realizada">Cotação realizada com sucesso!        ;) </string>
+    <string name="cotacao_falha">Falha no envio da cotação        :( </string>
+    <string name="Cliente">Cliente</string>
+
+    <!-- ver cotações -->
+    <string name="ver_cotacoes">Ver Cotações</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 
 </resources>

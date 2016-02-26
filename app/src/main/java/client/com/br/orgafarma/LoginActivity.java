@@ -56,6 +56,8 @@ public class LoginActivity extends AppCompatActivity {
 
         if(saveLogin == true){
             OrgafarmaApplication.TOKEN = loginPreferences.getString(SharePreferenceCons.Login.TOKEN, "");
+            OrgafarmaApplication.REPRESENTANTE_ID = loginPreferences.getString(SharePreferenceCons.Login.REPRESENTANTE_ID, "");
+            OrgafarmaApplication.REPRESENTANTE_CODIGO = loginPreferences.getString(SharePreferenceCons.Login.REPRESENTANTE_COD, "");
             Intent i = new Intent(LoginActivity.this, ActivityPrincipal.class);
             i.putExtra("msg", "Logado com Sucesso");
             startActivity(i);
@@ -93,6 +95,8 @@ public class LoginActivity extends AppCompatActivity {
                 e.printStackTrace();
             } catch (SoapFault soapFault) {
                 soapFault.printStackTrace();
+            } catch(RuntimeException e){
+                e.printStackTrace();
             }
             return null;
         }
@@ -115,6 +119,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else {
                     OrgafarmaApplication.TOKEN = validacao.getToken();
+                    OrgafarmaApplication.REPRESENTANTE_CODIGO = validacao.getCodRepresentante() + "";
+                    OrgafarmaApplication.REPRESENTANTE_ID = validacao.getIdRepresentante() + "";
 
 
                     loginPrefsEditor.putString(SharePreferenceCons.Login.REPRESENTANTE_ID, validacao.getIdRepresentante() + "");

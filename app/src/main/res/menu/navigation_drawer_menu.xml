@@ -7,6 +7,11 @@
         android:title="@string/cotacao"
         android:icon="@drawable/ic_assessment_black_24dp"
         ></item>
+    <item
+        android:id="@+id/navigation_ver_cotacoes"
+        android:title="@string/ver_cotacoes"
+        android:icon="@drawable/ic_visibility_black_24dp"
+        ></item>
     <group
         android:checkableBehavior="single">
 

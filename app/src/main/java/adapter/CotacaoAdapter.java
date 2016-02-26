@@ -10,8 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import Constantes.Constants;
-import client.com.br.orgafarma.Modal.Cotacao;
-import client.com.br.orgafarma.Modal.CotacaoEnvio;
+import client.com.br.orgafarma.Modal.ItemCotacao;
 import client.com.br.orgafarma.R;
 
 /**
@@ -19,7 +18,7 @@ import client.com.br.orgafarma.R;
  */
 public class CotacaoAdapter extends BaseAdapter{
     private String TYPE;
-    private static List<CotacaoEnvio> mItens;
+    private static List<ItemCotacao> mItens;
     private Context mCtx;
 
     private deleteInterface mDeleteInterface;
@@ -28,32 +27,37 @@ public class CotacaoAdapter extends BaseAdapter{
         void deleteItem(int index);
     }
 
-    public CotacaoAdapter(Context mCtx, List<CotacaoEnvio> mItens){
+    public CotacaoAdapter(Context mCtx, List<ItemCotacao> mItens){
         this.mCtx = mCtx;
         this.mItens = mItens;
     }
 
-    public CotacaoAdapter(Context mCtx, List<CotacaoEnvio> mItens, deleteInterface mDeleteInterface, String TYPE){
+    public CotacaoAdapter(Context mCtx, List<ItemCotacao> mItens, deleteInterface mDeleteInterface, String TYPE){
         this.mCtx = mCtx;
         this.mItens = mItens;
         this.TYPE = TYPE;
         this.mDeleteInterface = mDeleteInterface;
     }
 
-    public CotacaoAdapter(Context mCtx, List<CotacaoEnvio> mItens, String TYPE){
+    public CotacaoAdapter(Context mCtx, List<ItemCotacao> mItens, String TYPE){
         this.mCtx = mCtx;
         this.mItens = mItens;
         this.TYPE = TYPE;
     }
 
+    public void clearCotacao(){
+        mItens.clear();
+        notifyDataSetChanged();
+    }
 
-    public void addItem(CotacaoEnvio item){
+
+    public void addItem(ItemCotacao item){
         mItens.add(0, item);
         notifyDataSetChanged();
     }
 
-    public static CotacaoEnvio deleteItem(int index){
-        CotacaoEnvio returner = mItens.remove(index);
+    public static ItemCotacao deleteItem(int index){
+        ItemCotacao returner = mItens.remove(index);
         return returner;
     }
 
@@ -65,12 +69,12 @@ public class CotacaoAdapter extends BaseAdapter{
         return sum;
     }
 
-    public boolean contains(CotacaoEnvio produto){
+    public boolean contains(ItemCotacao produto){
         return mItens.contains(produto);
     }
 
     public boolean contains(String produto){
-        for (CotacaoEnvio i : mItens){
+        for (ItemCotacao i : mItens){
             if (i.getmProduto().equals(produto)){
                 return true;
             }
@@ -78,7 +82,7 @@ public class CotacaoAdapter extends BaseAdapter{
         return false;
     }
 
-    public int getItemIndex(CotacaoEnvio item){
+    public int getItemIndex(ItemCotacao item){
         if (mItens.contains(item)){
             return mItens.indexOf(item);
         }
@@ -127,7 +131,7 @@ public class CotacaoAdapter extends BaseAdapter{
         return view;
     }
 
-    public static void addItemParaTodos(CotacaoEnvio envio){
+    public static void addItemParaTodos(ItemCotacao envio){
         mItens.add(envio);
     }
 }

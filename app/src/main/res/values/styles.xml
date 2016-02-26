@@ -22,4 +22,19 @@
         <item name="android:background">#fff</item>
     </style>
 
+    <style name="verCotacaoStyleHeader">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#e2000000</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@drawable/border_ver_cotacao_header</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="verCotacaoStyleItem">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#e2000000</item>
+        <item name="android:padding">20dp</item>
+        <item name="android:background">@drawable/border_ver_cotacao</item>
+    </style>
+
 </resources>

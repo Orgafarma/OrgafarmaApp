@@ -7,26 +7,47 @@ import java.io.Serializable;
 /**
  * Created by rodolfo.rezende on 07/02/2016.
  */
-public class CotacaoEnvio implements Serializable{
+public class ItemCotacao implements Serializable{
 
-    public CotacaoEnvio(String mProduto, int mValor, int mQtd, boolean mIsGenerico) {
+    public ItemCotacao(String mCodProduto, String mProduto, double mValor, int mQtd, boolean mIsGenerico) {
+        this.mCodProduto = mCodProduto;
         this.mProduto = mProduto;
         this.mValor = mValor;
         this.mQtd = mQtd;
         this.mIsGenerico = mIsGenerico;
+        this.mValorTotal = mQtd * mValor;
     }
+
+    @SerializedName("codigo_produto")
+    private String mCodProduto;
 
     @SerializedName("produto")
     private String mProduto;
 
     @SerializedName("valor")
-    private int mValor;
+    private double mValor;
 
     @SerializedName("qtd")
     private int mQtd;
 
     @SerializedName("isGenerico")
     private boolean mIsGenerico;
+
+    @SerializedName("valorTotal")
+    private double mValorTotal;
+
+    public void setmValor(double mValor) {
+        this.mValor = mValor;
+    }
+
+    public double getmValorTotal() {
+        mValorTotal = getmQtd() * getmValor();
+        return mValorTotal;
+    }
+
+    public void setmValorTotal(double mValorTotal) {
+        this.mValorTotal = mValorTotal;
+    }
 
     public String getmProduto() {
         return mProduto;
@@ -36,7 +57,7 @@ public class CotacaoEnvio implements Serializable{
         this.mProduto = mProduto;
     }
 
-    public int getmValor() {
+    public double getmValor() {
         return mValor;
     }
 
@@ -62,6 +83,6 @@ public class CotacaoEnvio implements Serializable{
 
     @Override
     public boolean equals(Object o) {
-        return ((CotacaoEnvio) o).getmProduto().equals(this.getmProduto()) && ((CotacaoEnvio) o).ismIsGenerico() == this.ismIsGenerico();
+        return ((ItemCotacao) o).getmProduto().equals(this.getmProduto()) && ((ItemCotacao) o).ismIsGenerico() == this.ismIsGenerico();
     }
 }

@@ -8,4 +8,7 @@ import android.view.MenuItem;
  */
 public class OrgafarmaApplication extends Application {
     public static String TOKEN;
+    public static String REPRESENTANTE_ID;
+    public static String REPRESENTANTE_CODIGO;
+
 }

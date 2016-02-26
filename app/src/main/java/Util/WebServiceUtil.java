@@ -88,8 +88,8 @@ public class WebServiceUtil {
         PropertyInfo infToken = createProperty(SharePreferenceCons.Login.TOKEN, OrgafarmaApplication.TOKEN);
         PropertyInfo infInicioDate = createProperty(Constants.DATA_INICIO, getInicioMes());
         PropertyInfo infFimDate = createProperty(Constants.DATA_FINAL, getFimMesAtual());
-        PropertyInfo infRepresentId = createProperty(SharePreferenceCons.Login.REPRESENTANTE_ID, SharedPref.getString(ctx, SharePreferenceCons.Login.REPRESENTANTE_ID));
-        PropertyInfo infRepresentCod = createProperty(SharePreferenceCons.Login.REPRESENTANTE_COD, SharedPref.getString(ctx, SharePreferenceCons.Login.REPRESENTANTE_COD));
+        PropertyInfo infRepresentId = createProperty(SharePreferenceCons.Login.REPRESENTANTE_ID, OrgafarmaApplication.REPRESENTANTE_ID);
+        PropertyInfo infRepresentCod = createProperty(SharePreferenceCons.Login.REPRESENTANTE_COD, OrgafarmaApplication.REPRESENTANTE_CODIGO);
 
         SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
         request.addProperty(infToken);
@@ -123,8 +123,8 @@ public class WebServiceUtil {
         PropertyInfo infToken = createProperty(SharePreferenceCons.Login.TOKEN, OrgafarmaApplication.TOKEN);
         PropertyInfo infInicioDate = createProperty(Constants.DATA_INICIO, getInicioMes());
         PropertyInfo infFimDate = createProperty(Constants.DATA_FINAL, getFimMesAtual());
-        PropertyInfo infRepresentId = createProperty(SharePreferenceCons.Login.REPRESENTANTE_ID, SharedPref.getString(ctx, SharePreferenceCons.Login.REPRESENTANTE_ID));
-        PropertyInfo infRepresentCod = createProperty(SharePreferenceCons.Login.REPRESENTANTE_COD, SharedPref.getString(ctx, SharePreferenceCons.Login.REPRESENTANTE_COD));
+        PropertyInfo infRepresentId = createProperty(SharePreferenceCons.Login.REPRESENTANTE_ID, OrgafarmaApplication.REPRESENTANTE_ID);
+        PropertyInfo infRepresentCod = createProperty(SharePreferenceCons.Login.REPRESENTANTE_COD, OrgafarmaApplication.REPRESENTANTE_CODIGO);
 
         SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
 
@@ -183,6 +183,76 @@ public class WebServiceUtil {
         }
     }
 
+    public static String sendCotacao(String jsonCotacoes){
+        METHOD_NAME = "registraCotacao";
+        PropertyInfo infToken = createProperty("Cotacoes", jsonCotacoes);
+
+        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+        request.addProperty(infToken);
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.setOutputSoapObject(request);
+
+        HttpTransportSE httpTransportSE = new HttpTransportSE(URL);
+
+        try {
+            httpTransportSE.call(SOAP_ACTION, envelope);
+            Object response = envelope.getResponse();
+            return response.toString();
+        } catch (IOException e) {
+            return null;
+        } catch (XmlPullParserException e) {
+            return null;
+        }
+    }
+
+    public static String buscarCotacoes(String jsonCotacoes){
+        METHOD_NAME = "buscarCotacoes";
+        PropertyInfo infToken = createProperty("BuscaCotacoes", jsonCotacoes);
+
+        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+        request.addProperty(infToken);
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.setOutputSoapObject(request);
+
+        HttpTransportSE httpTransportSE = new HttpTransportSE(URL);
+
+        try {
+            httpTransportSE.call(SOAP_ACTION, envelope);
+            Object response = envelope.getResponse();
+            return response.toString();
+        } catch (IOException e) {
+            return null;
+        } catch (XmlPullParserException e) {
+            return null;
+        }
+
+    }
+
+    public static String buscarClientes(String token, String representanteCod){
+        METHOD_NAME = "buscarClientes";
+
+        PropertyInfo infToken = createProperty("token", token);
+        PropertyInfo infRepreCod = createProperty("representante_cod", representanteCod);
+
+        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+        request.addProperty(infToken);
+        request.addProperty(infRepreCod);
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.setOutputSoapObject(request);
+
+        HttpTransportSE httpTransportSE = new HttpTransportSE(URL);
+
+        try {
+            httpTransportSE.call(SOAP_ACTION, envelope);
+            Object response = envelope.getResponse();
+            return response.toString();
+        } catch (IOException e) {
+            return null;
+        } catch (XmlPullParserException e) {
+            return null;
+        }
+    }
+
     private static PropertyInfo createProperty(String NAME, String value){
         PropertyInfo propertyInf = new PropertyInfo();
         propertyInf.setName(NAME);
@@ -204,6 +274,8 @@ public class WebServiceUtil {
     private static String getDate(Date today, String replacer){
         SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");
         String aux = simpleDate.format(today);
-        return aux.replace(aux.substring(8, 10), replacer);
+        String[] aux2 = aux.split("-");
+        aux = aux2[0] + "-" + aux2[1] + "-" + replacer;
+        return aux;
     }
 }

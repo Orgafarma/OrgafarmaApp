@@ -20,10 +20,12 @@ import android.view.SubMenu;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import adapter.VerCotacaoAdapter;
 import application.OrgafarmaApplication;
 import client.com.br.orgafarma.Fragment.CotacaoFragment;
 import client.com.br.orgafarma.Fragment.InboxFragment;
 import client.com.br.orgafarma.Fragment.InboxVendaVendedorFragment;
+import client.com.br.orgafarma.Fragment.VerCotacoesFragment;
 
 public class ActivityPrincipal extends AppCompatActivity {
 
@@ -105,6 +107,10 @@ public class ActivityPrincipal extends AppCompatActivity {
                                 setFragment(R.id.navigation_cotacao);
                                 drawerLayout.closeDrawer(GravityCompat.START);
                                 return true;
+                            case R.id.navigation_ver_cotacoes:
+                                setFragment(R.id.navigation_ver_cotacoes);
+                                drawerLayout.closeDrawer(GravityCompat.START);
+                                return true;
 
                         }
                         return true;
@@ -133,6 +139,11 @@ public class ActivityPrincipal extends AppCompatActivity {
             case R.id.navigation_cotacao:
                 CotacaoFragment cotacaoFragment = new CotacaoFragment();
                 fragmentTransaction.replace(R.id.fragment, cotacaoFragment);
+                fragmentTransaction.commit();
+                break;
+            case R.id.navigation_ver_cotacoes:
+                VerCotacoesFragment verCotacaoFrag = new VerCotacoesFragment();
+                fragmentTransaction.replace(R.id.fragment, verCotacaoFrag);
                 fragmentTransaction.commit();
                 break;
         }

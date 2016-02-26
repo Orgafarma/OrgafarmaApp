@@ -20,4 +20,16 @@ public class VendasBO {
     public static String listaProdutoCotacao(){
         return WebServiceUtil.getProdutoCotacao();
     }
+
+    public static String sendCotacoes(String jsonCotacao){
+        return WebServiceUtil.sendCotacao(jsonCotacao);
+    }
+
+    public static String buscarCotacoes(String jsonCotacao){
+        return WebServiceUtil.buscarCotacoes(jsonCotacao);
+    }
+
+    public static String buscarClientes(String token, String representanteId){
+        return WebServiceUtil.buscarClientes(token, representanteId);
+    }
 }

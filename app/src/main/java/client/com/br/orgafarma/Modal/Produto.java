@@ -13,7 +13,7 @@ public class Produto implements Serializable {
     private String mDescricao;
 
     @SerializedName("codigo")
-    private double mCodigo;
+    private String mCodigo;
 
     public String getmDescricao() {
         return mDescricao;
@@ -23,11 +23,11 @@ public class Produto implements Serializable {
         this.mDescricao = mDescricao;
     }
 
-    public double getmCodigo() {
+    public String getmCodigo() {
         return mCodigo;
     }
 
-    public void setmCodigo(double mCodigo) {
+    public void setmCodigo(String mCodigo) {
         this.mCodigo = mCodigo;
     }
 }

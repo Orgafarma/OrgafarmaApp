@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <TextView
+        android:id="@+id/data"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="Data"
+        android:gravity="center"
+        style="@style/verCotacaoStyleItem"
+        />
+
+    <TextView
+        android:id="@+id/qtdItens"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="Qtd de Itens"
+        android:gravity="center"
+        style="@style/verCotacaoStyleItem"
+        />
+
+    <TextView
+        android:id="@+id/vlrTotal"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="Valor Total"
+        android:gravity="center"
+        style="@style/verCotacaoStyleItem"
+        />
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:gravity="center"
+        style="@style/verCotacaoStyleItem"
+        />
+
+    <ImageView
+        android:id="@+id/mais"
+        android:layout_width="0dp"
+        android:layout_weight="0.4"
+        android:layout_height="wrap_content"
+        android:text="Analise"
+        android:gravity="center"
+        android:src="@drawable/ic_search_black_24dp"
+        style="@style/verCotacaoStyleItem"
+        />
+
+</LinearLayout>
