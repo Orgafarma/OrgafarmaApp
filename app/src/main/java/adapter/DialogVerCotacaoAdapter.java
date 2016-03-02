@@ -11,22 +11,24 @@ import android.widget.TextView;
 import java.util.List;
 
 import client.com.br.orgafarma.Modal.ItemVerCotacao;
+import client.com.br.orgafarma.Modal.ItemVerCotacaoEspecifico;
 import client.com.br.orgafarma.R;
 
 /**
- * Created by rodolfo.rezende on 22/02/2016.
+ * Created by rodolfo.rezende on 29/02/2016.
  */
-public class VerCotacaoAdapter extends BaseAdapter {
-    private List<ItemVerCotacao> mItens;
+public class DialogVerCotacaoAdapter extends BaseAdapter {
+
+    private List<ItemVerCotacaoEspecifico> mItens;
     private Context mCtx;
     private VerCotacao mVerCotacao;
 
     public interface VerCotacao{
-        void Mais(ItemVerCotacao Cotacao, int index);
+        void Mais();
         void Delete();
     }
 
-    public VerCotacaoAdapter(List<ItemVerCotacao> mItens, Context mCtx, VerCotacao mVerCotacao){
+    public DialogVerCotacaoAdapter(List<ItemVerCotacaoEspecifico> mItens, Context mCtx, VerCotacao mVerCotacao){
         this.mItens = mItens;
         this.mCtx = mCtx;
         this.mVerCotacao = mVerCotacao;
@@ -48,12 +50,10 @@ public class VerCotacaoAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        final int PENDENTE = 1;
-        final int FINALIZADO = 2;
-
-        final ItemVerCotacao item = mItens.get(position);
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ItemVerCotacaoEspecifico item = mItens.get(position);
         View view = LayoutInflater.from(mCtx).inflate(R.layout.item_ver_cotacao, null);
+        /*
         TextView data = (TextView) view.findViewById(R.id.data);
         TextView qtdItens = (TextView) view.findViewById(R.id.qtdItens);
         TextView vlrTotal = (TextView) view.findViewById(R.id.vlrTotal);
@@ -82,10 +82,11 @@ public class VerCotacaoAdapter extends BaseAdapter {
             mais.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mVerCotacao.Mais(item, position);
+                    mVerCotacao.Mais();
                 }
             });
         }
+        */
         return view;
     }
 }

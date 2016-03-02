@@ -5,20 +5,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
-import client.com.br.orgafarma.Modal.ItemVerCotacao;
-import client.com.br.orgafarma.Modal.ItemVerCotacaoDetalhe;
+import client.com.br.orgafarma.Modal.ItemVerCotacaoEspecifico;
 import client.com.br.orgafarma.R;
+import helperClass.Utils;
 
 /**
  * Created by rodolfo.rezende on 25/02/2016.
  */
 public class VerCotacaoDetalheAdapter extends BaseAdapter {
-    private List<ItemVerCotacaoDetalhe> mItens;
+    private List<ItemVerCotacaoEspecifico> mItens;
     private Context mCtx;
     private VerCotacao mVerCotacao;
 
@@ -27,10 +27,9 @@ public class VerCotacaoDetalheAdapter extends BaseAdapter {
         void Delete();
     }
 
-    public VerCotacaoDetalheAdapter(List<ItemVerCotacaoDetalhe> mItens, Context mCtx, VerCotacao mVerCotacao){
+    public VerCotacaoDetalheAdapter(List<ItemVerCotacaoEspecifico> mItens, Context mCtx){
         this.mItens = mItens;
         this.mCtx = mCtx;
-        this.mVerCotacao = mVerCotacao;
     }
 
     @Override
@@ -50,30 +49,22 @@ public class VerCotacaoDetalheAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ItemVerCotacaoDetalhe item = mItens.get(position);
+        ItemVerCotacaoEspecifico item = mItens.get(position);
 
-        View view = LayoutInflater.from(mCtx).inflate(R.layout.item_ver_cotacao, null);
-     /*   TextView data = (TextView) view.findViewById(R.id.data);
-        TextView qtdItens = (TextView) view.findViewById(R.id.qtdItens);
-        TextView vlrTotal = (TextView) view.findViewById(R.id.vlrTotal);
-        TextView status = (TextView) view.findViewById(R.id.status);
-        ImageView mais = (ImageView) view.findViewById(R.id.mais);
+        View view = LayoutInflater.from(mCtx).inflate(R.layout.dialog_item_ver_cotacao, null);
+        TextView codigoProduto = (TextView) view.findViewById(R.id.codigo_ver_item);
+        TextView produto = (TextView) view.findViewById(R.id.produto_ver_item);
+        TextView qtd = (TextView) view.findViewById(R.id.qtd_ver_item);
+        TextView preco = (TextView) view.findViewById(R.id.preco_ver_item);
+        TextView total = (TextView) view.findViewById(R.id.Total);
 
-        data.setText(item.getData());
-        qtdItens.setText(item.getQtdItens());
-        vlrTotal.setText(item.getVlrTotal());
-        status.setText(item.getStatus());
+        codigoProduto.setText(item.getCodProduto());
+        produto.setText(item.getProduto());
+        qtd.setText(item.getQtd());
+        preco.setText(Utils.formatarDecimal(item.getPrecoSugerido(), 1));
 
-        if (mVerCotacao == null){
-            mais.setVisibility(View.GONE);
-        } else {
-            mais.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mVerCotacao.Mais();
-                }
-            });
-        }*/
+        double totalSum = Double.parseDouble(preco.getText().toString()) * Double.parseDouble(qtd.getText().toString());
+        total.setText(Utils.formatarDecimal(totalSum, 1));
 
         return view;
     }

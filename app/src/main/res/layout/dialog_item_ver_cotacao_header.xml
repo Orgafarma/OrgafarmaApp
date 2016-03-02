@@ -10,9 +10,10 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="Codigo do produto"
+        android:text="Codigo"
         android:gravity="center"
         style="@style/verCotacaoStyleHeader"
+        android:singleLine="true"
         />
 
     <TextView
@@ -22,15 +23,17 @@
         android:text="Produto"
         android:gravity="center"
         style="@style/verCotacaoStyleHeader"
+        android:singleLine="true"
         />
 
     <TextView
         android:layout_width="0dp"
-        android:layout_weight="0.5"
+        android:layout_weight="0.4"
         android:layout_height="wrap_content"
         android:text="Qtd"
         android:gravity="center"
         style="@style/verCotacaoStyleHeader"
+        android:singleLine="true"
         />
 
     <TextView
@@ -40,15 +43,17 @@
         android:text="Preço Sugerido"
         android:gravity="center"
         style="@style/verCotacaoStyleHeader"
+        android:singleLine="true"
         />
 
     <TextView
         android:layout_width="0dp"
-        android:layout_weight="0.4"
+        android:layout_weight="0.8"
         android:layout_height="wrap_content"
         android:text="Total"
         android:gravity="center"
         style="@style/verCotacaoStyleHeader"
+        android:singleLine="true"
         />
 
 </LinearLayout>

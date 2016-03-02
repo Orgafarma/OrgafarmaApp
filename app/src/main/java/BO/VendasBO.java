@@ -32,4 +32,8 @@ public class VendasBO {
     public static String buscarClientes(String token, String representanteId){
         return WebServiceUtil.buscarClientes(token, representanteId);
     }
+
+    public static String buscarCotacaoEspecifico(String token, String codCotacao){
+        return WebServiceUtil.buscarCotacaoEspecifico(token, codCotacao);
+    }
 }

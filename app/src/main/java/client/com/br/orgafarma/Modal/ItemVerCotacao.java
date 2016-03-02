@@ -18,12 +18,13 @@ public class ItemVerCotacao implements Serializable{
     @SerializedName("quantidade_total")
     private String qtdItens;
 
+
     @SerializedName("valor_total")
+
     private String vlrTotal;
 
     @SerializedName("status")
     private String status;
-
 
     public ItemVerCotacao(String data, String qtdItens, String vlrTotal, String status) {
 
@@ -63,5 +64,13 @@ public class ItemVerCotacao implements Serializable{
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getCodigoCotacao() {
+        return codigoCotacao;
+    }
+
+    public void setCodigoCotacao(String codigoCotacao) {
+        this.codigoCotacao = codigoCotacao;
     }
 }

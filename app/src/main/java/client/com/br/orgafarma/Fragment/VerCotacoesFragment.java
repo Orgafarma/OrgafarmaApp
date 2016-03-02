@@ -1,9 +1,11 @@
 package client.com.br.orgafarma.Fragment;
 
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -27,17 +30,22 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import BO.VendasBO;
 import adapter.VerCotacaoAdapter;
+import adapter.VerCotacaoDetalheAdapter;
 import application.OrgafarmaApplication;
 import client.com.br.orgafarma.Modal.BuscarCotacao;
 import client.com.br.orgafarma.Modal.ItemVerCotacao;
+import client.com.br.orgafarma.Modal.ItemVerCotacaoEspecifico;
+import client.com.br.orgafarma.Modal.ListItemVerCotacaoEspecifico;
 import client.com.br.orgafarma.Modal.TodosItemVerCotacao;
 import client.com.br.orgafarma.R;
 import helperClass.ExpandableListView;
 import helperClass.Mask;
+import helperClass.Utils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,6 +66,8 @@ public class VerCotacoesFragment extends Fragment {
     // --- Models
     private TodosItemVerCotacao mItemVerCotacoes;
     private BuscarCotacao mCurrentBusca;
+    private boolean mIsThereHeader = false;
+    private ListItemVerCotacaoEspecifico mItensCotacaoEspecifico;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,6 +80,7 @@ public class VerCotacoesFragment extends Fragment {
     private void initVies(){
         mDataInicio = (EditText) mView.findViewById(R.id.data_inicio);
         mDataInicio.addTextChangedListener(Mask.insert("##/##/####", mDataInicio));
+        mDataInicio.setText(Utils.getDataFormatted(Utils.getFirstDateOfCurrentMonth()));
 
         mOpenDatePickerInicial = (ImageView) mView.findViewById(R.id.dataInicialPicker);
         mOpenDatePickerInicial.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +135,8 @@ public class VerCotacoesFragment extends Fragment {
         });
 
         mDataFim = (EditText) mView.findViewById(R.id.data_fim);
+        mDataFim.setText(Utils.getDataFormatted(Utils.getLastDateOfCurrentMonth()));
+
         mDataFim.addTextChangedListener(Mask.insert("##/##/####", mDataFim));
         initSpinner();
         mBuscar = (Button) mView.findViewById(R.id.buscar);
@@ -146,8 +159,8 @@ public class VerCotacoesFragment extends Fragment {
         mLvCotacoes = (ExpandableListView) mView.findViewById(R.id.cotacoes);
         VerCotacaoAdapter adapter = new VerCotacaoAdapter(mItemVerCotacoes.getItens(), getActivity().getApplicationContext(), new VerCotacaoAdapter.VerCotacao() {
             @Override
-            public void Mais() {
-                //showDialogCotacao();
+            public void Mais(ItemVerCotacao Cotacao, int index) {
+                new LoadCotacaoCodigo(getContext(), mView, Cotacao, index).execute();
             }
 
             @Override
@@ -156,24 +169,56 @@ public class VerCotacoesFragment extends Fragment {
         });
         mLvCotacoes.setAdapter(adapter);
         mLvCotacoes.setExpanded(true);
-        mLvCotacoes.addHeaderView(LayoutInflater.from(getContext()).inflate(R.layout.item_ver_cotacao_header, null));
+
+        if (!mIsThereHeader) {
+            mLvCotacoes.addHeaderView(LayoutInflater.from(getContext()).inflate(R.layout.item_ver_cotacao_header, null));
+            mIsThereHeader = true;
+        }
     }
 
-   /* private void showDialogCotacao(){
+    private void showDialogCotacao(){
+        final int PENDENTE = 1;
+        final int FINALIZADO = 2;
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
+
         View view = inflater.inflate(R.layout.dialog_ver_cotacao, null);
-        VerCotacaoAdapter adapter = new VerCotacaoAdapter(getItens(), getActivity().getApplicationContext(), null);
+
+        //   ----header
+        TextView codCotacao = (TextView) view.findViewById(R.id.cod_cotacao);
+        TextView vlrCotacao = (TextView) view.findViewById(R.id.vlr_cotacao);
+        TextView dataPedido = (TextView) view.findViewById(R.id.data_pedido);
+        TextView situacao = (TextView) view.findViewById(R.id.situacao);
+        ItemVerCotacao item = mItemVerCotacoes.getItens().get(mItensCotacaoEspecifico.getIndexOfCotacoes());
+
+        codCotacao.setText(item.getCodigoCotacao());
+        vlrCotacao.setText(Utils.formatarDecimal(item.getVlrTotal(), 1));
+        dataPedido.setText(item.getData());
+
+        switch (Integer.parseInt(item.getStatus())){
+            case PENDENTE:
+                situacao.setText(getResources().getText(R.string.pendente));
+                break;
+            case FINALIZADO:
+                situacao.setText(getResources().getText(R.string.finalizados));
+                break;
+            default:
+                situacao.setText(getResources().getText(R.string.indefined));
+                break;
+        }
+        //   ----header
+
+        VerCotacaoDetalheAdapter adapter = new VerCotacaoDetalheAdapter(mItensCotacaoEspecifico.getmItens(), getActivity().getApplicationContext());
         ExpandableListView listView = (ExpandableListView) view.findViewById(R.id.cotacoes_dialog);
         listView.setExpanded(true);
-        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.item_ver_cotacao_header, null);
-        //headerView.findViewById(R.id.analise).setVisibility(View.GONE);
+        View headerView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_item_ver_cotacao_header, null);
         listView.addHeaderView(headerView);
         listView.setAdapter(adapter);
         builder.setView(view);
         builder.setPositiveButton("OK", null);
         builder.show();
-    }*/
+    }
 
     private class LoadingAsync extends AsyncTask<Void, Void, TodosItemVerCotacao> {
         ProgressDialog progressDialog = new ProgressDialog(getActivity());
@@ -202,24 +247,87 @@ public class VerCotacoesFragment extends Fragment {
             } catch (JSONException e) {
                 Log.i("ERRO", e.getMessage());
                 return null;
+            } catch(Exception ex){
+                Snackbar snackbar = Snackbar
+                        .make(mView, getContext().getResources().getText(R.string.prob_config), Snackbar.LENGTH_LONG);
+                snackbar.show();
             }
             return mItemVerCotacoes;
         }
 
         @Override
         protected void onPostExecute(TodosItemVerCotacao cotacao) {
-            initListView();
+            if (mItemVerCotacoes != null) {
+                initListView();
+            }
             progressDialog.dismiss();
         }
     }
 
-    private void buscar(){
-        String dataInicio = mDataInicio.getText().toString();
-        String dataFim = mDataFim.getText().toString();
-        String status = mSituacao.getSelectedItemPosition() + "";
-        String codRepresentante = OrgafarmaApplication.REPRESENTANTE_CODIGO;
-        mCurrentBusca = new BuscarCotacao(codRepresentante, dataInicio, dataFim, status);
-        new LoadingAsync(getContext(), mView).execute();
+    private class LoadCotacaoCodigo extends AsyncTask<Void, Void, ListItemVerCotacaoEspecifico> {
+        ProgressDialog progressDialog = new ProgressDialog(getActivity());
+
+        private Context mContext;
+        private View rootView;
+        private ItemVerCotacao codCotacao;
+        private int index;
+
+        public LoadCotacaoCodigo(Context context, View rootView, ItemVerCotacao Cotacao, int index) {
+            this.mContext = context;
+            this.rootView = rootView;
+            this.codCotacao = Cotacao;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("Carregando...");
+            progressDialog.show();
+        }
+
+        @Override
+        protected ListItemVerCotacaoEspecifico doInBackground(Void... params) {
+            Gson gson = new Gson();
+            try {
+                mItensCotacaoEspecifico =  gson.fromJson(new JSONObject(VendasBO.buscarCotacaoEspecifico(OrgafarmaApplication.TOKEN, codCotacao.getCodigoCotacao())).toString(), ListItemVerCotacaoEspecifico.class);
+                mItensCotacaoEspecifico.setIndexOfCotacoes(index);
+            } catch (JSONException e) {
+                Log.i("ERRO", e.getMessage());
+                return null;
+            } catch(Exception ex){
+                Snackbar snackbar = Snackbar
+                        .make(mView, getContext().getResources().getText(R.string.prob_config), Snackbar.LENGTH_LONG);
+                snackbar.show();
+            }
+            return mItensCotacaoEspecifico;
+        }
+
+        @Override
+        protected void onPostExecute(ListItemVerCotacaoEspecifico cotacao) {
+            if (mItensCotacaoEspecifico != null) {
+                showDialogCotacao();
+            } else {
+                Snackbar snackbar = Snackbar
+                        .make(mView, getContext().getResources().getText(R.string.prob_config), Snackbar.LENGTH_LONG);
+                snackbar.show();
+            }
+            progressDialog.dismiss();
+        }
     }
 
+    private void buscar() {
+        try {
+            String dataInicio = mDataInicio.getText().toString();
+            String dataFim = mDataFim.getText().toString();
+            String status = mSituacao.getSelectedItemPosition() + "";
+            String codRepresentante = OrgafarmaApplication.REPRESENTANTE_CODIGO;
+            mCurrentBusca = new BuscarCotacao(codRepresentante, dataInicio, dataFim, status);
+            new LoadingAsync(getContext(), mView).execute();
+        } catch (Exception ex){
+            Snackbar snackbar = Snackbar
+                    .make(mView, getContext().getResources().getText(R.string.prob_config), Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+    }
 }

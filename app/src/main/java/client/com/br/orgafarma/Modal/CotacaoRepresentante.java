@@ -10,6 +10,8 @@ import java.util.List;
  * Created by rodolfo.rezende on 17/02/2016.
  */
 public class CotacaoRepresentante implements Serializable{
+    @SerializedName("cliente")
+    private String mCliente;
 
     @SerializedName("codigo")
     private String mCodigo;
@@ -29,7 +31,8 @@ public class CotacaoRepresentante implements Serializable{
     @SerializedName("cotacaoItens")
     private List<ItemCotacao> mCotacoesEnvio = new ArrayList<>();
 
-    public CotacaoRepresentante(String mCodigo, String mData, String mCodigoRepresentante, double mValorTotal, double mQtdTotal, List<ItemCotacao> mCotacoesEnvio) {
+    public CotacaoRepresentante(String mCliente, String mCodigo, String mData, String mCodigoRepresentante, double mValorTotal, double mQtdTotal, List<ItemCotacao> mCotacoesEnvio) {
+        this.mCliente = mCliente;
         this.mCodigo = mCodigo;
         this.mData = mData;
         this.mCodigoRepresentante = mCodigoRepresentante;
@@ -37,6 +40,7 @@ public class CotacaoRepresentante implements Serializable{
         this.mQtdTotal = mQtdTotal;
         this.mCotacoesEnvio = mCotacoesEnvio;
     }
+
 
     public CotacaoRepresentante(){
     }

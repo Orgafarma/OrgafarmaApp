@@ -253,6 +253,31 @@ public class WebServiceUtil {
         }
     }
 
+    public static String buscarCotacaoEspecifico(String token, String codCotacao){
+        METHOD_NAME = "buscarCotacaoEspecifico";
+
+        PropertyInfo infToken = createProperty("token", token);
+        PropertyInfo infRepreCod = createProperty("codigo_cotacao", codCotacao);
+
+        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+        request.addProperty(infToken);
+        request.addProperty(infRepreCod);
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.setOutputSoapObject(request);
+
+        HttpTransportSE httpTransportSE = new HttpTransportSE(URL);
+
+        try {
+            httpTransportSE.call(SOAP_ACTION, envelope);
+            Object response = envelope.getResponse();
+            return response.toString();
+        } catch (IOException e) {
+            return null;
+        } catch (XmlPullParserException e) {
+            return null;
+        }
+    }
+
     private static PropertyInfo createProperty(String NAME, String value){
         PropertyInfo propertyInf = new PropertyInfo();
         propertyInf.setName(NAME);

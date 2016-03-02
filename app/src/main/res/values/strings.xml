@@ -24,11 +24,17 @@
     <string name="concluir">Concluir</string>
     <string name="items">Itens</string>
     <string name="generico">Aceito genérico deste remédio</string>
-    <string name="campo_vazio">O campo descrição está vazio</string>
+    <string name="descricao_vazio">O campo descrição está vazio</string>
+    <string name="cliente_vazio">O campo cliente está vazio</string>
     <string name="produto_nao_cadastrado">Produto não cadastrado</string>
+    <string name="cliente_nao_cadastrado">cliente não cadastrado</string>
     <string name="cotacao_realizada">Cotação realizada com sucesso!        ;) </string>
     <string name="cotacao_falha">Falha no envio da cotação        :( </string>
     <string name="Cliente">Cliente</string>
+    <string name="indefined">Indefinido</string>
+    <string name="pendente">Pendente</string>
+    <string name="finalizados">Finalizados</string>
+    <string name="prob_config">Estamos com problemas de configuração :(</string>
 
     <!-- ver cotações -->
     <string name="ver_cotacoes">Ver Cotações</string>

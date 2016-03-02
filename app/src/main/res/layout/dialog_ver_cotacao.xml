@@ -9,6 +9,9 @@
     >
 
     <TableLayout
+        android:layout_marginLeft="15dp"
+        android:padding="10dp"
+        android:background="@drawable/rounded_with_corner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -17,16 +20,19 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="Código cotação: "
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:textColor="#000"
                 />
 
             <TextView
+                android:id="@+id/cod_cotacao"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="246516"
-                android:textSize="25sp"
+                android:textSize="18sp"
                 android:textColor="#000"
+                android:textStyle="bold"
+
                 />
         </TableRow>
         <TableRow>
@@ -34,16 +40,18 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="Valor Da Cotação: "
-                android:textSize="25sp"
                 android:textColor="#000"
+                android:textSize="20sp"
                 />
 
             <TextView
+                android:id="@+id/vlr_cotacao"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="246516"
-                android:textSize="25sp"
+                android:textSize="18sp"
                 android:textColor="#000"
+                android:textStyle="bold"
                 />
         </TableRow>
         <TableRow>
@@ -51,33 +59,39 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="Data Pedido: "
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:textColor="#000"
                 />
 
             <TextView
+                android:id="@+id/data_pedido"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="246516"
-                android:textSize="25sp"
+                android:textSize="18sp"
                 android:textColor="#000"
+                android:textStyle="bold"
                 />
         </TableRow>
         <TableRow>
             <TextView
+
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="Situacao: "
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:textColor="#000"
+
                 />
 
             <TextView
+                android:id="@+id/situacao"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="246516"
-                android:textSize="25sp"
+                android:textSize="18sp"
                 android:textColor="#000"
+                android:textStyle="bold"
                 />
         </TableRow>
     </TableLayout>

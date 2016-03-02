@@ -87,8 +87,6 @@
             android:text="Lembrar Login?"
             android:textColor="#000" />
 
-
-
     </LinearLayout>
 
     <TextView

@@ -20,7 +20,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -34,14 +33,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Objects;
 
 import BO.VendasBO;
 import Constantes.Constants;
 import adapter.CotacaoAdapter;
 import application.OrgafarmaApplication;
-import client.com.br.orgafarma.Modal.BuscarCliente;
-import client.com.br.orgafarma.Modal.BuscarCotacao;
 import client.com.br.orgafarma.Modal.Cotacao;
 import client.com.br.orgafarma.Modal.CotacaoRepresentante;
 import client.com.br.orgafarma.Modal.ItemCotacao;
@@ -265,38 +261,52 @@ public class CotacaoFragment extends Fragment {
         return null;
     }
 
-    private void AddItem(){
-        if (!mDescricao.getText().toString().isEmpty()) {
-            String produto = mDescricao.getText().toString();
-            if (getProdutos().contains(produto)) {
-                AIAceitaGenerico(mAceitaGenerico.isChecked());
-                int qtd = (mQtd.getText().toString().isEmpty()) ? 0 : Integer.parseInt(mQtd.getText().toString());
-                double valor = (mValor.getText().toString().isEmpty()) ? 0 : Double.parseDouble(mValor.getText().toString());
-                boolean isGenerico = mAceitaGenerico.isChecked();
-                ItemCotacao envio = new ItemCotacao(getProdutoCodigo(produto), produto, valor, qtd, isGenerico);
+    private void AddItem(){                                                  // refatorar este metodo dps
+        if (!mClienteNome.getText().toString().isEmpty()) {
+            if (!mDescricao.getText().toString().isEmpty()) {
+                String produto = mDescricao.getText().toString();
+                String cliente = mClienteNome.getText().toString();
 
-                if (!mAdapterProduto.contains(envio)) {
-                    CotacaoAdapter.addItemParaTodos(envio);
-                    sumTotal(mTotalQtd, qtd);
-                    sumTotal(mTotalValor, valor * qtd);
-                    mCotacoesEnvio.add(envio);
-                    notifyDataSetChangedAll();
+                if (getClientes().contains(cliente)){
+                    if (getProdutos().contains(produto)) {
+                        AIAceitaGenerico(mAceitaGenerico.isChecked());
+                        int qtd = (mQtd.getText().toString().isEmpty()) ? 0 : Integer.parseInt(mQtd.getText().toString());
+                        double valor = (mValor.getText().toString().isEmpty()) ? 0 : Double.parseDouble(mValor.getText().toString());
+                        boolean isGenerico = mAceitaGenerico.isChecked();
+                        ItemCotacao envio = new ItemCotacao(getProdutoCodigo(produto), produto, valor, qtd, isGenerico);
+
+                        if (!mAdapterProduto.contains(envio)) {
+                            CotacaoAdapter.addItemParaTodos(envio);
+                            sumTotal(mTotalQtd, qtd);
+                            sumTotal(mTotalValor, valor * qtd);
+                            mCotacoesEnvio.add(envio);
+                            notifyDataSetChangedAll();
+                        } else {
+                            int index = mAdapterProduto.getItemIndex(envio);
+                            int newQtd = mAdapterQtd.sumQtd(index, qtd);
+                            envio.setmQtd(newQtd);
+                            sumTotal(mTotalQtd, qtd);
+                            sumTotal(mTotalValor, valor * qtd);
+                            mCotacoesEnvio.set(index, envio);
+                        }
+                    } else {
+                        Snackbar snackbar = Snackbar
+                                .make(mView, getContext().getResources().getText(R.string.produto_nao_cadastrado), Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    }
                 } else {
-                    int index = mAdapterProduto.getItemIndex(envio);
-                    int newQtd = mAdapterQtd.sumQtd(index, qtd);
-                    envio.setmQtd(newQtd);
-                    sumTotal(mTotalQtd, qtd);
-                    sumTotal(mTotalValor, valor * qtd);
-                    mCotacoesEnvio.set(index, envio);
+                    Snackbar snackbar = Snackbar
+                            .make(mView, getContext().getResources().getText(R.string.cliente_nao_cadastrado), Snackbar.LENGTH_LONG);
+                    snackbar.show();
                 }
             } else {
                 Snackbar snackbar = Snackbar
-                        .make(mView, getContext().getResources().getText(R.string.produto_nao_cadastrado), Snackbar.LENGTH_LONG);
+                        .make(mView, getContext().getResources().getText(R.string.descricao_vazio), Snackbar.LENGTH_LONG);
                 snackbar.show();
             }
         } else {
             Snackbar snackbar = Snackbar
-                    .make(mView, getContext().getResources().getText(R.string.campo_vazio), Snackbar.LENGTH_LONG);
+                    .make(mView, getContext().getResources().getText(R.string.cliente_vazio), Snackbar.LENGTH_LONG);
             snackbar.show();
         }
     }
@@ -478,6 +488,7 @@ public class CotacaoFragment extends Fragment {
     private void concluir(){
         if (Utils.checkConnection(getContext())) {
             mCotacaoRepresentante = new CotacaoRepresentante(
+                    mClienteNome.getText().toString(),
                     createCodigo(),
                     getData(),
                     OrgafarmaApplication.REPRESENTANTE_CODIGO,
