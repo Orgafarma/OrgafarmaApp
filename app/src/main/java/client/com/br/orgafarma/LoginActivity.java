@@ -159,6 +159,9 @@ public class LoginActivity extends AppCompatActivity {
                 }
             } catch (NullPointerException ex) {
                 ex.printStackTrace();
+                Snackbar snackbar = Snackbar
+                        .make(getWindow().getDecorView(), getApplicationContext().getResources().getText(R.string.prob_config), Snackbar.LENGTH_LONG);
+                snackbar.show();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

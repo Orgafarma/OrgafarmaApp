@@ -1,7 +1,6 @@
 package client.com.br.orgafarma.Fragment;
 
 import android.app.ProgressDialog;
-import android.content.ClipData;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.rey.material.app.DatePickerDialog;
 import com.rey.material.app.Dialog;
 import com.rey.material.app.DialogFragment;
@@ -29,9 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 import BO.VendasBO;
 import adapter.VerCotacaoAdapter;
@@ -39,7 +34,6 @@ import adapter.VerCotacaoDetalheAdapter;
 import application.OrgafarmaApplication;
 import client.com.br.orgafarma.Modal.BuscarCotacao;
 import client.com.br.orgafarma.Modal.ItemVerCotacao;
-import client.com.br.orgafarma.Modal.ItemVerCotacaoEspecifico;
 import client.com.br.orgafarma.Modal.ListItemVerCotacaoEspecifico;
 import client.com.br.orgafarma.Modal.TodosItemVerCotacao;
 import client.com.br.orgafarma.R;
@@ -92,6 +86,9 @@ public class VerCotacoesFragment extends Fragment {
                     public void onPositiveActionClicked(DialogFragment fragment) {
                         DatePickerDialog dialog = (DatePickerDialog)fragment.getDialog();
                         mDataInicio.setText(dialog.getFormattedDate(new SimpleDateFormat("dd/MM/yyyy")));
+                        if (checkDataInputs()){
+                            mDataInicio.setText(dialog.getFormattedDate(new SimpleDateFormat("dd/MM/yyyy")));
+                        }
                         super.onPositiveActionClicked(fragment);
                     }
 
@@ -143,9 +140,26 @@ public class VerCotacoesFragment extends Fragment {
         mBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buscar();
+                if (checkDataInputs()) {
+                    buscar();
+                } else {
+                    Snackbar snackbar = Snackbar
+                            .make(mView, getContext().getResources().getText(R.string.data_n_config), Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                }
             }
         });
+    }
+
+    private boolean checkDataInputs(){
+        String aux = mDataInicio.getText().toString();
+        String aux2 = mDataFim.getText().toString();
+        boolean dataInicio =  (aux.charAt(2) == '/' && aux.charAt(5) == '/' && aux.length() == 10) ? true : false;
+        boolean dataFinal = (aux2.charAt(2) == '/' && aux2.charAt(5) == '/' && aux2.length() == 10) ? true : false;
+        if (dataInicio && dataFinal){
+            return true;
+        }
+        return false;
     }
 
     private void initSpinner(){
@@ -153,6 +167,12 @@ public class VerCotacoesFragment extends Fragment {
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(), R.layout.row_spn, new String[]{"Todos", "Pendente", "Finalizados"});
         adapter2.setDropDownViewResource(R.layout.row_spn_dropdown);
         mSituacao.setAdapter(adapter2);
+        mSituacao.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(Spinner parent, View view, int position, long id) {
+                buscar();
+            }
+        });
     }
 
     private void initListView(){
@@ -190,6 +210,8 @@ public class VerCotacoesFragment extends Fragment {
         TextView vlrCotacao = (TextView) view.findViewById(R.id.vlr_cotacao);
         TextView dataPedido = (TextView) view.findViewById(R.id.data_pedido);
         TextView situacao = (TextView) view.findViewById(R.id.situacao);
+        TextView usuarioEncerramento = (TextView) view.findViewById(R.id.usuario_encerramento);
+
         ItemVerCotacao item = mItemVerCotacoes.getItens().get(mItensCotacaoEspecifico.getIndexOfCotacoes());
 
         codCotacao.setText(item.getCodigoCotacao());

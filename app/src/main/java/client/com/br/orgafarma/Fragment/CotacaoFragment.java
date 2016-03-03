@@ -38,6 +38,7 @@ import BO.VendasBO;
 import Constantes.Constants;
 import adapter.CotacaoAdapter;
 import application.OrgafarmaApplication;
+import client.com.br.orgafarma.Modal.BuscarCliente;
 import client.com.br.orgafarma.Modal.Cotacao;
 import client.com.br.orgafarma.Modal.CotacaoRepresentante;
 import client.com.br.orgafarma.Modal.ItemCotacao;
@@ -68,6 +69,7 @@ public class CotacaoFragment extends Fragment {
     private TextView mTotalQtd;
     private CheckBox mAceitaGenerico;
     private ImageView mRemoveDescr;
+    private ImageView mRemoveCliente;
 
     // --- Adapters
     private CotacaoAdapter mAdapterProduto;
@@ -163,6 +165,16 @@ public class CotacaoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mDescricao.setText("");
+                mDescricao.requestFocus();
+            }
+        });
+
+        mRemoveCliente = (ImageView) mView.findViewById(R.id.remove_cliente_txt);
+        mRemoveCliente.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mClienteNome.setText("");
+                mClienteNome.requestFocus();
             }
         });
 
@@ -261,7 +273,8 @@ public class CotacaoFragment extends Fragment {
         return null;
     }
 
-    private void AddItem(){                                                  // refatorar este metodo dps
+    private void AddItem(){
+        // refatorar este metodo dps
         if (!mClienteNome.getText().toString().isEmpty()) {
             if (!mDescricao.getText().toString().isEmpty()) {
                 String produto = mDescricao.getText().toString();
@@ -269,6 +282,9 @@ public class CotacaoFragment extends Fragment {
 
                 if (getClientes().contains(cliente)){
                     if (getProdutos().contains(produto)) {
+                        mRemoveCliente.setEnabled(false);
+                        mClienteNome.setEnabled(false);
+
                         AIAceitaGenerico(mAceitaGenerico.isChecked());
                         int qtd = (mQtd.getText().toString().isEmpty()) ? 0 : Integer.parseInt(mQtd.getText().toString());
                         double valor = (mValor.getText().toString().isEmpty()) ? 0 : Double.parseDouble(mValor.getText().toString());
@@ -430,6 +446,10 @@ public class CotacaoFragment extends Fragment {
         @Override
         protected void onPostExecute(Cotacao cotacao) {
             progressDialog.dismiss();
+            if (mIsTransferenciaOk){
+                mRemoveCliente.setEnabled(true);
+                mClienteNome.setEnabled(true);
+            }
         }
     }
 
@@ -489,6 +509,7 @@ public class CotacaoFragment extends Fragment {
         if (Utils.checkConnection(getContext())) {
             mCotacaoRepresentante = new CotacaoRepresentante(
                     mClienteNome.getText().toString(),
+                    getCodigoCliente(mClienteNome.getText().toString()),
                     createCodigo(),
                     getData(),
                     OrgafarmaApplication.REPRESENTANTE_CODIGO,
@@ -513,6 +534,7 @@ public class CotacaoFragment extends Fragment {
             mAceitaGenerico.setChecked(Whoswinning());
             mTotalValor.setText("0");
             mTotalQtd.setText("0");
+            mClienteNome.setText("");
 
             //adapters
             mAdapterQtd.clearCotacao();
@@ -523,7 +545,7 @@ public class CotacaoFragment extends Fragment {
             mCotacoesEnvio.clear();
 
             mCotacaoRepresentante = null;
-            mDescricao.requestFocus();
+            mClienteNome.requestFocus();
         } else {
             Snackbar snackbar = Snackbar
                     .make(mView, getContext().getResources().getText(R.string.cotacao_falha), Snackbar.LENGTH_LONG);
@@ -541,26 +563,37 @@ public class CotacaoFragment extends Fragment {
         return new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
     }
 
+    private String getCodigoCliente(String nameClient){
+        for (BuscarCliente i : mClientes.getClientes()) {
+            if (i.getClienteNome().equals(nameClient)) {
+                return i.getCodCliente();
+            }
+        }
+        return "";
+    }
+
     //artificial inteligence
     private void AIAceitaGenerico(boolean isAceito) {
+        int QTD_CONSTANTE = 3;
+
         int qtd_sim = SharedPref.getInt(getContext(), "aceitaGenerico");
         int qtd_n = SharedPref.getInt(getContext(), "n_aceitaGenerico");
 
-        if (qtd_n == 5 && qtd_sim == 5){
+        if (qtd_n == QTD_CONSTANTE && qtd_sim == QTD_CONSTANTE){
             qtd_n = 0;
             qtd_sim = 0;
         }
 
         if (isAceito) {
-            if (qtd_sim == 5) {
-                SharedPref.setInt(getContext(), "aceitaGenerico", 5);
+            if (qtd_sim == QTD_CONSTANTE) {
+                SharedPref.setInt(getContext(), "aceitaGenerico", QTD_CONSTANTE);
             } else {
                 SharedPref.setInt(getContext(), "aceitaGenerico", ++qtd_sim);
             }
 
         } else {
-            if (qtd_n == 5) {
-                    SharedPref.setInt(getContext(), "n_aceitaGenerico", 5);
+            if (qtd_n == QTD_CONSTANTE) {
+                    SharedPref.setInt(getContext(), "n_aceitaGenerico", QTD_CONSTANTE);
                 } else {
                     SharedPref.setInt(getContext(), "n_aceitaGenerico", ++qtd_n);
                 }
