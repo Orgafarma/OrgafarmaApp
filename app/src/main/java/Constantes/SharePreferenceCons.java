@@ -11,9 +11,11 @@ public class SharePreferenceCons {
         public static String TOKEN = "token";
         public static String REPRESENTANTE_ID = "id_representante";
         public static String REPRESENTANTE_COD = "codigo_representante";
+        public static String NOME_REPRESENTANTE = "nome_representante";
+        public static String EMPRESA_NOME = "empresa_nome";
+        public static String EMAIL = "email";
     }
 
     public static class Comuns{
-
     }
 }

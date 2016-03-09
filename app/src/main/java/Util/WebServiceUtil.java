@@ -90,6 +90,8 @@ public class WebServiceUtil {
         PropertyInfo infFimDate = createProperty(Constants.DATA_FINAL, getFimMesAtual());
         PropertyInfo infRepresentId = createProperty(SharePreferenceCons.Login.REPRESENTANTE_ID, OrgafarmaApplication.REPRESENTANTE_ID);
         PropertyInfo infRepresentCod = createProperty(SharePreferenceCons.Login.REPRESENTANTE_COD, OrgafarmaApplication.REPRESENTANTE_CODIGO);
+        PropertyInfo infEmpresa = createProperty(SharePreferenceCons.Login.EMPRESA_NOME, OrgafarmaApplication.EMPRESA_NOME);
+
 
         SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
         request.addProperty(infToken);
@@ -97,6 +99,7 @@ public class WebServiceUtil {
         request.addProperty(infFimDate);
         request.addProperty(infRepresentId);
         request.addProperty(infRepresentCod);
+        request.addProperty(infEmpresa);
 
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(request);

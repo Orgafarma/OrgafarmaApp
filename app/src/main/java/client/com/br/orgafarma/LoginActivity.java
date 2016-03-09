@@ -40,19 +40,21 @@ import client.com.br.orgafarma.Modal.TodosItemVerCotacao;
  */
 public class LoginActivity extends AppCompatActivity {
 
-    private LoginBO loginBO;
-    private EditText edtlogin;
-    private EditText edtSenha;
-    private CheckBox saveLoginCheckBox;
-    private SharedPreferences loginPreferences;
-    private SharedPreferences.Editor loginPrefsEditor;
+    // --  primitives
     private String username,password;
     private Boolean saveLogin;
 
+    // --  Objects
+    private LoginBO loginBO;
+    private SharedPreferences loginPreferences;
+    private SharedPreferences.Editor loginPrefsEditor;
 
 
+    // --  Views
     private Button teste;
-
+    private EditText edtlogin;
+    private EditText edtSenha;
+    private CheckBox saveLoginCheckBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,15 +131,25 @@ public class LoginActivity extends AppCompatActivity {
                         loginPrefsEditor.putString(SharePreferenceCons.Login.TOKEN, validacao.getToken());
                         loginPrefsEditor.putString(SharePreferenceCons.Login.REPRESENTANTE_ID, validacao.getIdRepresentante() + "");
                         loginPrefsEditor.putString(SharePreferenceCons.Login.REPRESENTANTE_COD, validacao.getCodRepresentante() + "");
+                        loginPrefsEditor.putString(SharePreferenceCons.Login.NOME_REPRESENTANTE, validacao.getNomeRepresentate());
+                        loginPrefsEditor.putString(SharePreferenceCons.Login.EMPRESA_NOME, validacao.getEmpresaNome());
+                        loginPrefsEditor.putString(SharePreferenceCons.Login.EMAIL, validacao.getEmail());
                         OrgafarmaApplication.TOKEN = validacao.getToken();
                         loginPrefsEditor.commit();
                     } else {
                         OrgafarmaApplication.TOKEN = validacao.getToken();
                         OrgafarmaApplication.REPRESENTANTE_CODIGO = validacao.getCodRepresentante() + "";
                         OrgafarmaApplication.REPRESENTANTE_ID = validacao.getIdRepresentante() + "";
+                        OrgafarmaApplication.NOME_REPRESENTANTE = validacao.getNomeRepresentate();
+                        OrgafarmaApplication.EMPRESA_NOME = validacao.getEmpresaNome();
+                        OrgafarmaApplication.EMAIL = validacao.getEmail();
 
                         loginPrefsEditor.putString(SharePreferenceCons.Login.REPRESENTANTE_ID, validacao.getIdRepresentante() + "");
                         loginPrefsEditor.putString(SharePreferenceCons.Login.REPRESENTANTE_COD, validacao.getCodRepresentante() + "");
+                        loginPrefsEditor.putString(SharePreferenceCons.Login.NOME_REPRESENTANTE, validacao.getNomeRepresentate() + "");
+                        loginPrefsEditor.putString(SharePreferenceCons.Login.EMPRESA_NOME, validacao.getEmpresaNome() + "");
+                        loginPrefsEditor.putString(SharePreferenceCons.Login.EMAIL, validacao.getEmail() + "");
+
                         loginPrefsEditor.commit();
                     }
                     Intent i = new Intent(LoginActivity.this, ActivityPrincipal.class);

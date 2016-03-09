@@ -87,7 +87,7 @@ public class InboxFragment extends Fragment {
         @Override
         protected void onPostExecute(PrevisaoVenda previsaoVenda) {
 
-            int totalMeta = 0;
+            double totalMeta = 0;
             double totalVenda = 0;
             double totalCOB = 0;
             double totalProjecao = 0;
@@ -197,7 +197,7 @@ public class InboxFragment extends Fragment {
                     adicionaTextViewLinha(tbrow,params, log.getProjecao(), false, 0);
                     adicionaTextViewLinha(tbrow,params, log.getVazio(), false, 0);
 
-                    totalMeta += Integer.parseInt(log.getMeta());
+                    totalMeta += Double.parseDouble(log.getMeta());
                     totalVenda +=  Double.parseDouble(log.getVenda());
                     totalCOB += Double.parseDouble(log.getCob());
                     totalProjecao += Double.parseDouble(log.getProjecao());
@@ -245,7 +245,7 @@ public class InboxFragment extends Fragment {
 
         }
 
-        private void adicionaTotaisVendaDireta(TableRow.LayoutParams params, int totalMeta, double totalVenda,
+        private void adicionaTotaisVendaDireta(TableRow.LayoutParams params, double totalMeta, double totalVenda,
                                                double totalCOB, double totalProjecao, double totalVazio, TableLayout tableLayout, String Titulo){
 
             TableRow tbrow0 = new TableRow(rootView.getContext());;
