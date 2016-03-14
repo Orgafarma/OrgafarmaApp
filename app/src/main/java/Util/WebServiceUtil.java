@@ -34,7 +34,7 @@ public class WebServiceUtil {
 
     private static final String SOAP_ACTION = "urn:hellowsdl#hello";
     private static final String NAMESPACE = "urn:hellowsdl";
-    private static final String URL = "http://10.1.0.136/webservice.php?wsdl";
+    private static final String URL = "http://www.orgafarma.com.br/ws?wsdl";
     private static String METHOD_NAME;
 
     public static ValidacaoLogin loginWebService(String usuario, String senha) throws SoapFault {
@@ -128,6 +128,7 @@ public class WebServiceUtil {
         PropertyInfo infFimDate = createProperty(Constants.DATA_FINAL, getFimMesAtual());
         PropertyInfo infRepresentId = createProperty(SharePreferenceCons.Login.REPRESENTANTE_ID, OrgafarmaApplication.REPRESENTANTE_ID);
         PropertyInfo infRepresentCod = createProperty(SharePreferenceCons.Login.REPRESENTANTE_COD, OrgafarmaApplication.REPRESENTANTE_CODIGO);
+        PropertyInfo infEmpresa = createProperty(SharePreferenceCons.Login.EMPRESA_NOME, OrgafarmaApplication.EMPRESA_NOME);
 
         SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
 
@@ -136,6 +137,7 @@ public class WebServiceUtil {
         request.addProperty(infFimDate);
         request.addProperty(infRepresentId);
         request.addProperty(infRepresentCod);
+        request.addProperty(infEmpresa);
 
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.setOutputSoapObject(request);

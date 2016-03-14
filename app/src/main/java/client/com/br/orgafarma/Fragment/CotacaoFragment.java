@@ -98,13 +98,13 @@ public class CotacaoFragment extends Fragment {
     private void initViews(){
         mListProduto = (ExpandableListView) mView.findViewById(R.id.list_produto);
         mAdapterProduto = new CotacaoAdapter(getContext(), new ArrayList(), Constants.PRODUTO);
-        mListProduto.setAdapter(mAdapterProduto);
         setLists(mListProduto, getString(R.string.produto));
+        mListProduto.setAdapter(mAdapterProduto);
 
         mListValor = (ExpandableListView) mView.findViewById(R.id.list_valor);
         mAdapterValor = new CotacaoAdapter(getContext(), new ArrayList(), Constants.VALOR);
-        mListValor.setAdapter(mAdapterValor);
         setLists(mListValor, getString(R.string.valor));
+        mListValor.setAdapter(mAdapterValor);
 
         mListQtd = (ExpandableListView) mView.findViewById(R.id.list_qtd);
         mAdapterQtd = new CotacaoAdapter(getContext(), new ArrayList(), new CotacaoAdapter.deleteInterface() {
@@ -113,8 +113,8 @@ public class CotacaoFragment extends Fragment {
                 deleteItemOnLists(index);
             }
         }, Constants.QTD);
-        mListQtd.setAdapter(mAdapterQtd);
         setLists(mListQtd, getString(R.string.qtd));
+        mListQtd.setAdapter(mAdapterQtd);
 
         mQtd = (EditText) mView.findViewById(R.id.quantidade_edit);
         mValor = (EditText) mView.findViewById(R.id.valor_edit);
