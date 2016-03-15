@@ -85,10 +85,7 @@ public class VerCotacoesFragment extends Fragment {
                     @Override
                     public void onPositiveActionClicked(DialogFragment fragment) {
                         DatePickerDialog dialog = (DatePickerDialog)fragment.getDialog();
-                        mDataInicio.setText(dialog.getFormattedDate(new SimpleDateFormat("dd/MM/yyyy")));
-                        if (checkDataInputs()){
-                            mDataInicio.setText(dialog.getFormattedDate(new SimpleDateFormat("dd/MM/yyyy")));
-                        }
+                        mDataInicio.setText(Utils.getDataFormatted(dialog.getDate()));
                         super.onPositiveActionClicked(fragment);
                     }
 
@@ -187,13 +184,13 @@ public class VerCotacoesFragment extends Fragment {
             public void Delete() {
             }
         });
-        mLvCotacoes.setAdapter(adapter);
         mLvCotacoes.setExpanded(true);
 
         if (!mIsThereHeader) {
             mLvCotacoes.addHeaderView(LayoutInflater.from(getContext()).inflate(R.layout.item_ver_cotacao_header, null));
             mIsThereHeader = true;
         }
+        mLvCotacoes.setAdapter(adapter);
     }
 
     private void showDialogCotacao(){

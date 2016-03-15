@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -40,18 +41,16 @@ import client.com.br.orgafarma.R;
 
 
 public class InboxVendaVendedorFragment extends Fragment {
+    private static View mView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        final View view = inflater.inflate(R.layout.fragment_inbox_venda_vendedor, container, false);
-
-        ((ActivityPrincipal) getActivity()).getSupportActionBar().setTitle("VendaMes Vendedor/Televendas");
-
-        new LoadingAsync(getActivity(), view).execute();
-
-
-        return view;
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.fragment_inbox_venda_vendedor, container, false);
+            ((ActivityPrincipal) getActivity()).getSupportActionBar().setTitle("VendaMes Vendedor/Televendas");
+            new LoadingAsync(getActivity(), mView).execute();
+        }
+        return mView;
     }
 
     private class LoadingAsync extends AsyncTask<Void, Void, VendaTelevenda> {
@@ -82,6 +81,11 @@ public class InboxVendaVendedorFragment extends Fragment {
                 vendaTelevenda = gson.fromJson(new JSONObject(VendasBO.listaVendaVendedorTelevendas(getContext())).toString(), VendaTelevenda.class);
             } catch (JSONException e) {
                 Log.i("ERRO", e.getMessage());
+                return null;
+            } catch (Exception ex){
+                Snackbar snackbar = Snackbar
+                        .make(mView, getContext().getResources().getText(R.string.prob_config), Snackbar.LENGTH_LONG);
+                snackbar.show();
                 return null;
             }
             return vendaTelevenda;

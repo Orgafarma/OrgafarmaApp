@@ -62,7 +62,7 @@ public class CotacaoFragment extends Fragment {
     private EditText mValor;
     private AutoCompleteTextView mDescricao;
     private AutoCompleteTextView mClienteNome;
-    private View mView;
+    static private View mView;
     private Button mAddItem;
     private Button mConcluir;
     private TextView mTotalValor;
@@ -86,11 +86,13 @@ public class CotacaoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_cotacao, container, false);
 
-        if (Utils.checkConnection(getContext())) {
-            new LoadingAsync(getActivity(), mView).execute();
-            new BuscarClientes(getActivity(), mView).execute();
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.fragment_cotacao, container, false);
+            if (Utils.checkConnection(getContext())) {
+                new LoadingAsync(getActivity(), mView).execute();
+                new BuscarClientes(getActivity(), mView).execute();
+            }
         }
         return mView;
     }
@@ -391,6 +393,10 @@ public class CotacaoFragment extends Fragment {
             } catch (JSONException e) {
                 Log.i("ERRO", e.getMessage());
                 return null;
+            } catch(Exception ex){
+                Snackbar snackbar = Snackbar
+                        .make(mView, getContext().getResources().getText(R.string.prob_config), Snackbar.LENGTH_LONG);
+                snackbar.show();
             }
             return mCotacao;
         }
@@ -478,7 +484,7 @@ public class CotacaoFragment extends Fragment {
             try {
                 mClientes =  gson.fromJson(new JSONObject(VendasBO.buscarClientes(OrgafarmaApplication.TOKEN, OrgafarmaApplication.REPRESENTANTE_CODIGO)).toString(), TodosClientes.class);
             } catch (Exception e) {
-                Log.i("ERRO", e.getMessage());
+                Log.i("ERRO", e.getMessage() + "!");
             }
             return null;
         }

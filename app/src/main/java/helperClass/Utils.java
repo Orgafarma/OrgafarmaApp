@@ -43,6 +43,10 @@ public class Utils {
         return new SimpleDateFormat("dd/MM/yyyy").format(date);
     }
 
+    public static String getDataFormatted(long date){
+        return new SimpleDateFormat("dd/MM/yyyy").format(date);
+    }
+
     public static String formatarDecimal(double value, int qtd){
         String zeroAntesDaVirgula = "";
         for (int i = 0;i < qtd; i++){

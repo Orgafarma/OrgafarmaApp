@@ -63,7 +63,9 @@ public class VerCotacaoDetalheAdapter extends BaseAdapter {
         qtd.setText(item.getQtd());
         preco.setText(Utils.formatarDecimal(item.getPrecoSugerido(), 1));
 
-        double totalSum = Double.parseDouble(preco.getText().toString()) * Double.parseDouble(qtd.getText().toString());
+
+
+        double totalSum = Double.parseDouble(preco.getText().toString().replace(",", ".")) * Double.parseDouble(qtd.getText().toString().replace(",", "."));
         total.setText(Utils.formatarDecimal(totalSum, 1));
 
         return view;

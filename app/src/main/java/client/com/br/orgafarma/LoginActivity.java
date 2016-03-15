@@ -75,6 +75,10 @@ public class LoginActivity extends AppCompatActivity {
             OrgafarmaApplication.TOKEN = loginPreferences.getString(SharePreferenceCons.Login.TOKEN, "");
             OrgafarmaApplication.REPRESENTANTE_ID = loginPreferences.getString(SharePreferenceCons.Login.REPRESENTANTE_ID, "");
             OrgafarmaApplication.REPRESENTANTE_CODIGO = loginPreferences.getString(SharePreferenceCons.Login.REPRESENTANTE_COD, "");
+            OrgafarmaApplication.NOME_REPRESENTANTE = loginPreferences.getString(SharePreferenceCons.Login.NOME_REPRESENTANTE, "");
+            OrgafarmaApplication.EMPRESA_NOME = loginPreferences.getString(SharePreferenceCons.Login.EMPRESA_NOME, "");\
+            OrgafarmaApplication.EMAIL = loginPreferences.getString(SharePreferenceCons.Login.EMAIL, "");
+
             Intent i = new Intent(LoginActivity.this, ActivityPrincipal.class);
             i.putExtra("msg", "Logado com Sucesso");
             startActivity(i);

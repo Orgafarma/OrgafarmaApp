@@ -2,6 +2,7 @@ package helperClass;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.EditText;
 
 public abstract class Mask {
@@ -16,29 +17,31 @@ public abstract class Mask {
            String old = "";
 
            public void onTextChanged(CharSequence s, int start, int before, int count) {
-               String str = Mask.unmask(s.toString());
-               String mascara = "";
-               if (isUpdating) {
-                   old = str;
-                   isUpdating = false;
-                   return;
-               }
-               int i = 0;
-               for (char m : mask.toCharArray()) {
-                   if (m != ' ' && m != '#' && str.length() > old.length()) {
-                       mascara += m;
-                       continue;
+               if (s.length() < 8) {
+                   String str = Mask.unmask(s.toString());
+                   String mascara = "";
+                   if (isUpdating) {
+                       old = str;
+                       isUpdating = false;
+                       return;
                    }
-                   try {
-                       mascara += str.charAt(i);
-                   } catch (Exception e) {
-                       break;
+                   int i = 0;
+                   for (char m : mask.toCharArray()) {
+                       if (m != ' ' && m != '#' && str.length() > old.length()) {
+                           mascara += m;
+                           continue;
+                       }
+                       try {
+                           mascara += str.charAt(i);
+                       } catch (Exception e) {
+                           break;
+                       }
+                       i++;
                    }
-                   i++;
+                   isUpdating = true;
+                   ediTxt.setText(mascara);
+                   ediTxt.setSelection(mascara.length());
                }
-               isUpdating = true;
-               ediTxt.setText(mascara);
-               ediTxt.setSelection(mascara.length());
            }
 
            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
