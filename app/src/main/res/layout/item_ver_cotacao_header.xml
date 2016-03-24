@@ -8,7 +8,16 @@
 
     <TextView
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight="1.3"
+        android:layout_height="wrap_content"
+        android:text="Empresa"
+        android:gravity="center"
+        style="@style/verCotacaoStyleHeader"
+        />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight=".6"
         android:layout_height="wrap_content"
         android:text="Data"
         android:gravity="center"
@@ -17,7 +26,7 @@
 
     <TextView
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight=".7"
         android:layout_height="wrap_content"
         android:text="Qtd de Itens"
         android:gravity="center"
@@ -26,7 +35,7 @@
 
     <TextView
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight=".7"
         android:layout_height="wrap_content"
         android:text="Valor Total"
         android:gravity="center"
@@ -35,7 +44,7 @@
 
     <TextView
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight=".7"
         android:layout_height="wrap_content"
         android:text="Status"
         android:gravity="center"
@@ -44,9 +53,9 @@
 
     <TextView
         android:layout_width="0dp"
-        android:layout_weight="0.4"
+        android:layout_weight="0.3"
         android:layout_height="wrap_content"
-        android:text="Total"
+        android:text="Ver"
         android:gravity="center"
         style="@style/verCotacaoStyleHeader"
         />

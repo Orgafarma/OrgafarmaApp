@@ -3,6 +3,7 @@ package client.com.br.orgafarma.Fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -11,6 +12,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -38,6 +40,7 @@ import BO.VendasBO;
 import Constantes.Constants;
 import adapter.CotacaoAdapter;
 import application.OrgafarmaApplication;
+import client.com.br.orgafarma.Activities.NoConnection;
 import client.com.br.orgafarma.Modal.BuscarCliente;
 import client.com.br.orgafarma.Modal.Cotacao;
 import client.com.br.orgafarma.Modal.CotacaoRepresentante;
@@ -52,8 +55,7 @@ import helperClass.Utils;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CotacaoFragment extends Fragment {
-
+public class CotacaoFragment extends BaseFragment {
     // --- Views
     private ExpandableListView mListProduto;
     private ExpandableListView mListValor;
@@ -62,7 +64,7 @@ public class CotacaoFragment extends Fragment {
     private EditText mValor;
     private AutoCompleteTextView mDescricao;
     private AutoCompleteTextView mClienteNome;
-    static private View mView;
+    private View mView;
     private Button mAddItem;
     private Button mConcluir;
     private TextView mTotalValor;
@@ -80,165 +82,199 @@ public class CotacaoFragment extends Fragment {
     private Cotacao mCotacao;
     private List<ItemCotacao> mCotacoesEnvio = new ArrayList<>();
     private CotacaoRepresentante mCotacaoRepresentante;
-    private boolean mIsTransferenciaOk;
     private TodosClientes mClientes;
+    private android.os.Handler repeatUpdateHandler = new android.os.Handler();
+
+    // -- primitive types
+    private boolean mIsTransferenciaOk;
+    private boolean mAutoIncrement;
+    private boolean mAutoDecrement;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        if (mView == null) {
-            mView = inflater.inflate(R.layout.fragment_cotacao, container, false);
-            if (Utils.checkConnection(getContext())) {
-                new LoadingAsync(getActivity(), mView).execute();
-                new BuscarClientes(getActivity(), mView).execute();
-            }
+        mView = inflater.inflate(R.layout.fragment_cotacao, container, false);
+        if (Utils.checkConnection(getContext())) {
+            new buscarProdutos(getActivity(), mView).execute();
+            new BuscarClientes(getActivity(), mView).execute();
+        } else {
+            Intent intent = new Intent(getActivity(), NoConnection.class);
+            startActivity(intent);
         }
         return mView;
     }
 
     private void initViews(){
-        mListProduto = (ExpandableListView) mView.findViewById(R.id.list_produto);
-        mAdapterProduto = new CotacaoAdapter(getContext(), new ArrayList(), Constants.PRODUTO);
-        setLists(mListProduto, getString(R.string.produto));
-        mListProduto.setAdapter(mAdapterProduto);
+        try {
+            mListProduto = (ExpandableListView) mView.findViewById(R.id.list_produto);
+            mAdapterProduto = new CotacaoAdapter(getContext(), new ArrayList(), Constants.PRODUTO);
+            setLists(mListProduto, getString(R.string.produto));
+            mListProduto.setAdapter(mAdapterProduto);
 
-        mListValor = (ExpandableListView) mView.findViewById(R.id.list_valor);
-        mAdapterValor = new CotacaoAdapter(getContext(), new ArrayList(), Constants.VALOR);
-        setLists(mListValor, getString(R.string.valor));
-        mListValor.setAdapter(mAdapterValor);
+            mListValor = (ExpandableListView) mView.findViewById(R.id.list_valor);
+            mAdapterValor = new CotacaoAdapter(getContext(), new ArrayList(), Constants.VALOR);
+            setLists(mListValor, getString(R.string.valor));
+            mListValor.setAdapter(mAdapterValor);
 
-        mListQtd = (ExpandableListView) mView.findViewById(R.id.list_qtd);
-        mAdapterQtd = new CotacaoAdapter(getContext(), new ArrayList(), new CotacaoAdapter.deleteInterface() {
-            @Override
-            public void deleteItem(int index) {
-                deleteItemOnLists(index);
-            }
-        }, Constants.QTD);
-        setLists(mListQtd, getString(R.string.qtd));
-        mListQtd.setAdapter(mAdapterQtd);
+            mListQtd = (ExpandableListView) mView.findViewById(R.id.list_qtd);
+            mAdapterQtd = new CotacaoAdapter(getContext(), new ArrayList(), new CotacaoAdapter.deleteInterface() {
+                @Override
+                public void deleteItem(int index) {
+                    deleteItemOnLists(index);
+                }
+            }, Constants.QTD);
+            setLists(mListQtd, getString(R.string.qtd));
+            mListQtd.setAdapter(mAdapterQtd);
 
-        mQtd = (EditText) mView.findViewById(R.id.quantidade_edit);
-        mValor = (EditText) mView.findViewById(R.id.valor_edit);
+            mQtd = (EditText) mView.findViewById(R.id.quantidade_edit);
+            mValor = (EditText) mView.findViewById(R.id.valor_edit);
 
-        mClienteNome = (AutoCompleteTextView) mView.findViewById(R.id.cliente_edit);
-        addValuesToClientNome();
-        mClienteNome.setThreshold(1);
-        mClienteNome.setDropDownBackgroundResource(R.drawable.white_background);
+            mClienteNome = (AutoCompleteTextView) mView.findViewById(R.id.cliente_edit);
+            addValuesToClientNome();
+            mClienteNome.setThreshold(1);
+            mClienteNome.setDropDownBackgroundResource(R.drawable.white_background);
 
 
-        mDescricao = (AutoCompleteTextView) mView.findViewById(R.id.descricao_edit);
-        mDescricao.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mValor.requestFocus();
-                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-            }
+            mDescricao = (AutoCompleteTextView) mView.findViewById(R.id.descricao_edit);
+            mDescricao.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    mValor.requestFocus();
+                    getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
 
-            }
-        });
-        mDescricao.setThreshold(1);
-        mDescricao.setDropDownBackgroundResource(R.drawable.white_background);
-        addValuesToDescricao();
-        mDescricao.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+                }
+            });
+            mDescricao.setThreshold(1);
+            mDescricao.setDropDownBackgroundResource(R.drawable.white_background);
+            addValuesToDescricao();
+            mDescricao.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (mAdapterProduto.contains(s.toString())) {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (mAdapterProduto.contains(s.toString())) {
+                        mValor.setEnabled(false);
+                    } else {
+                        mValor.setEnabled(true);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                }
+            });
+
+            mRemoveDescr = (ImageView) mView.findViewById(R.id.remove_txt);
+            mRemoveDescr.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mDescricao.setText("");
+                    mDescricao.requestFocus();
+                }
+            });
+
+            mRemoveCliente = (ImageView) mView.findViewById(R.id.remove_cliente_txt);
+            mRemoveCliente.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mClienteNome.setText("");
+                    mClienteNome.requestFocus();
+                }
+            });
+
+            mTotalValor = (TextView) mView.findViewById(R.id.vlrTotal);
+            mTotalQtd = (TextView) mView.findViewById(R.id.qtdTotal);
+
+            mAddItem = (Button) mView.findViewById(R.id.add_item);
+
+            View add = mView.findViewById(R.id.add);
+            add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    increment();
+                }
+            });
+            add.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mAutoIncrement = true;
+                    repeatUpdateHandler.post(new RptUpdater());
+                    return false;
+                }
+            });
+
+            add.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if ((event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL)
+                            && mAutoIncrement) {
+                        mAutoIncrement = false;
+                    }
+                    return false;
+                }
+            });
+
+            View remove = mView.findViewById(R.id.remove);
+            remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    decrement();
+                }
+            });
+            remove.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mAutoDecrement = true;
+                    repeatUpdateHandler.post(new RptUpdater());
+                    return false;
+                }
+            });
+            remove.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if( (event.getAction()==MotionEvent.ACTION_UP || event.getAction()==MotionEvent.ACTION_CANCEL)
+                            && mAutoDecrement ){
+                        mAutoDecrement = false;
+                    }
+                    return false;
+                }
+            });
+
+
+            mAddItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     mValor.setEnabled(false);
-                } else {
-                    mValor.setEnabled(true);
+                    AddItem();
                 }
-            }
+            });
 
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-
-        mRemoveDescr = (ImageView) mView.findViewById(R.id.remove_txt);
-        mRemoveDescr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDescricao.setText("");
-                mDescricao.requestFocus();
-            }
-        });
-
-        mRemoveCliente = (ImageView) mView.findViewById(R.id.remove_cliente_txt);
-        mRemoveCliente.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mClienteNome.setText("");
-                mClienteNome.requestFocus();
-            }
-        });
-
-        mTotalValor = (TextView) mView.findViewById(R.id.vlrTotal);
-        mTotalQtd = (TextView) mView.findViewById(R.id.qtdTotal);
-
-        mAddItem = (Button)  mView.findViewById(R.id.add_item);
-
-        View add = mView.findViewById(R.id.add);
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int qtd = 0;
-                if (!mQtd.getText().toString().isEmpty()){
-                    qtd = Integer.parseInt(mQtd.getText().toString());
-                    if(qtd >= 10000) {
-                        mQtd.setText("0");
-                    } else {
-                        mQtd.setText(++qtd + "");
+            mAceitaGenerico = (CheckBox) mView.findViewById(R.id.AceitaGenerico);
+            mAceitaGenerico.setChecked(Whoswinning());
+            mConcluir = (Button) mView.findViewById(R.id.concluir_btn);
+            mConcluir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (verifyInputs()){
+                        concluir();
                     }
                 }
-                else {
-                    mQtd.setText("1");
-                }
-            }
-        });
+            });
+        } catch (final Exception ex){
+            Snackbar snackbar = Snackbar
+                    .make(mView, getContext().getResources().getText(R.string.prob_config), Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+    }
 
-        View remove = mView.findViewById(R.id.remove);
-        remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!mQtd.getText().toString().isEmpty()) {
-                    int qtd = Integer.parseInt(mQtd.getText().toString());
-                    if (qtd <= 0){
-                        mQtd.setText("10000");
-                    } else if(qtd > 10000){
-                        mQtd.setText("0");
-                    } else {
-                        mQtd.setText(--qtd + "");
-                    }
-                } else {
-                    mQtd.setText("10000");
-                }
-            }
-        });
-        mAddItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mValor.setEnabled(false);
-                AddItem();
-            }
-        });
-
-        mAceitaGenerico = (CheckBox) mView.findViewById(R.id.AceitaGenerico);
-        mAceitaGenerico.setChecked(Whoswinning());
-        mConcluir = (Button) mView.findViewById(R.id.concluir_btn);
-        mConcluir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                concluir();
-            }
-        });
+    private boolean verifyInputs(){
+        return mAdapterProduto.getCount() > 0;
     }
 
     private void deleteItemOnLists(int index){
@@ -246,6 +282,10 @@ public class CotacaoFragment extends Fragment {
         mCotacoesEnvio.remove(index);
         if (aux.getmProduto().equals(mDescricao.getText().toString())){
             mValor.setEnabled(true);
+        }
+        if (mCotacoesEnvio.size() == 0){
+            mClienteNome.setEnabled(true);
+            mRemoveCliente.setEnabled(true);
         }
 
         ItemCotacao excluido = CotacaoAdapter.deleteItem(index);
@@ -275,42 +315,45 @@ public class CotacaoFragment extends Fragment {
         return null;
     }
 
-    private void AddItem(){
-        // refatorar este metodo dps
+    private void AddItem() {
         if (!mClienteNome.getText().toString().isEmpty()) {
             if (!mDescricao.getText().toString().isEmpty()) {
                 String produto = mDescricao.getText().toString();
                 String cliente = mClienteNome.getText().toString();
 
                 if (getClientes().contains(cliente)){
-                    if (getProdutos().contains(produto)) {
-                        mRemoveCliente.setEnabled(false);
-                        mClienteNome.setEnabled(false);
+                    try {
+                        if (getProdutos().contains(produto)) {
+                            mRemoveCliente.setEnabled(false);
+                            mClienteNome.setEnabled(false);
 
-                        AIAceitaGenerico(mAceitaGenerico.isChecked());
-                        int qtd = (mQtd.getText().toString().isEmpty()) ? 0 : Integer.parseInt(mQtd.getText().toString());
-                        double valor = (mValor.getText().toString().isEmpty()) ? 0 : Double.parseDouble(mValor.getText().toString());
-                        boolean isGenerico = mAceitaGenerico.isChecked();
-                        ItemCotacao envio = new ItemCotacao(getProdutoCodigo(produto), produto, valor, qtd, isGenerico);
+                            AIAceitaGenerico(mAceitaGenerico.isChecked());
+                            int qtd = (mQtd.getText().toString().isEmpty()) ? 0 : Integer.parseInt(mQtd.getText().toString());
+                            double valor = (mValor.getText().toString().isEmpty()) ? 0 : Double.parseDouble(mValor.getText().toString());
+                            boolean isGenerico = mAceitaGenerico.isChecked();
+                            ItemCotacao envio = new ItemCotacao(getProdutoCodigo(produto), produto, valor, qtd, isGenerico);
 
-                        if (!mAdapterProduto.contains(envio)) {
-                            CotacaoAdapter.addItemParaTodos(envio);
-                            sumTotal(mTotalQtd, qtd);
-                            sumTotal(mTotalValor, valor * qtd);
-                            mCotacoesEnvio.add(envio);
-                            notifyDataSetChangedAll();
+                            if (!mAdapterProduto.contains(envio)) {
+                                CotacaoAdapter.addItemParaTodos(envio);
+                                sumTotal(mTotalQtd, qtd);
+                                sumTotal(mTotalValor, valor * qtd);
+                                mCotacoesEnvio.add(envio);
+                                notifyDataSetChangedAll();
+                            } else {
+                                int index = mAdapterProduto.getItemIndex(envio);
+                                int newQtd = mAdapterQtd.sumQtd(index, qtd);
+                                envio.setmQtd(newQtd);
+                                sumTotal(mTotalQtd, qtd);
+                                sumTotal(mTotalValor, valor * qtd);
+                                mCotacoesEnvio.set(index, envio);
+                            }
                         } else {
-                            int index = mAdapterProduto.getItemIndex(envio);
-                            int newQtd = mAdapterQtd.sumQtd(index, qtd);
-                            envio.setmQtd(newQtd);
-                            sumTotal(mTotalQtd, qtd);
-                            sumTotal(mTotalValor, valor * qtd);
-                            mCotacoesEnvio.set(index, envio);
+                            Snackbar snackbar = Snackbar
+                                    .make(mView, getContext().getResources().getText(R.string.produto_nao_cadastrado), Snackbar.LENGTH_LONG);
+                            snackbar.show();
                         }
-                    } else {
-                        Snackbar snackbar = Snackbar
-                                .make(mView, getContext().getResources().getText(R.string.produto_nao_cadastrado), Snackbar.LENGTH_LONG);
-                        snackbar.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 } else {
                     Snackbar snackbar = Snackbar
@@ -330,12 +373,12 @@ public class CotacaoFragment extends Fragment {
     }
 
     private void sumTotal(TextView view, double vlr){
-        double current = Double.parseDouble(view.getText().toString());
+        double current = Double.parseDouble(view.getText().toString().replace(",","."));
         double total = current + vlr;
         view.setText(total + "");
     }
 
-    private void addValuesToDescricao(){
+    private void addValuesToDescricao() throws Exception {
         ArrayAdapter<String> adapter;
         adapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_dropdown_item_1line, getProdutos());
@@ -349,30 +392,37 @@ public class CotacaoFragment extends Fragment {
         mClienteNome.setAdapter(adapter);
     }
 
-    private List<String> getProdutos(){
-        List<String> produtos = new ArrayList<>();
-        for (int i = 0; i < mCotacao.getmProduto().size(); i++){
-            produtos.add(mCotacao.getmProduto().get(i).getmDescricao());
+    private List<String> getProdutos() throws Exception{
+
+        if (mClientes != null) {
+            List<String> produtos = new ArrayList<>();
+            for (int i = 0; i < mCotacao.getmProduto().size(); i++) {
+                produtos.add(mCotacao.getmProduto().get(i).getmDescricao());
+            }
+            return produtos;
         }
-        return produtos;
+        return new ArrayList<String>();
     }
 
     private List<String> getClientes(){
-        List<String> clientes = new ArrayList<>();
-        for (int i = 0; i < mClientes.getClientes().size(); i++){
-            clientes.add(mClientes.getClientes().get(i).getClienteNome());
+        if (mClientes != null) {
+            List<String> clientes = new ArrayList<>();
+            for (int i = 0; i < mClientes.getClientes().size(); i++) {
+                clientes.add(mClientes.getClientes().get(i).getClienteNome());
+            }
+            return clientes;
         }
-        return clientes;
+        return new ArrayList<String>();
     }
 
 
-    private class LoadingAsync extends AsyncTask<Void, Void, Cotacao> {
+    private class buscarProdutos extends AsyncTask<Void, Void, Cotacao> {
         ProgressDialog progressDialog = new ProgressDialog(getActivity());
 
         private Context mContext;
         private View rootView;
 
-        public LoadingAsync(Context context, View rootView) {
+        public buscarProdutos(Context context, View rootView) {
             this.mContext = context;
             this.rootView = rootView;
         }
@@ -391,12 +441,10 @@ public class CotacaoFragment extends Fragment {
             try {
                 mCotacao = gson.fromJson(new JSONObject(VendasBO.listaProdutoCotacao()).toString(), Cotacao.class);
             } catch (JSONException e) {
-                Log.i("ERRO", e.getMessage());
+                showMessageErro(mView, e);
                 return null;
             } catch(Exception ex){
-                Snackbar snackbar = Snackbar
-                        .make(mView, getContext().getResources().getText(R.string.prob_config), Snackbar.LENGTH_LONG);
-                snackbar.show();
+                showMessageErro(mView, ex);
             }
             return mCotacao;
         }
@@ -436,7 +484,7 @@ public class CotacaoFragment extends Fragment {
                     mIsTransferenciaOk = false;
                 }
             } catch (Exception e) {
-                Log.i("ERRO", e.getMessage());
+                showMessageErro(mView, e);
                 return null;
             }
             getActivity().runOnUiThread(new Runnable() {
@@ -445,7 +493,6 @@ public class CotacaoFragment extends Fragment {
                     respostaSendCotacao();
                 }
             });
-
             return mCotacao;
         }
 
@@ -484,7 +531,7 @@ public class CotacaoFragment extends Fragment {
             try {
                 mClientes =  gson.fromJson(new JSONObject(VendasBO.buscarClientes(OrgafarmaApplication.TOKEN, OrgafarmaApplication.REPRESENTANTE_CODIGO)).toString(), TodosClientes.class);
             } catch (Exception e) {
-                Log.i("ERRO", e.getMessage() + "!");
+                showMessageErro(mView, e);
             }
             return null;
         }
@@ -502,7 +549,9 @@ public class CotacaoFragment extends Fragment {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.cotacao_header_list, null);
         TextView titleTxt = (TextView) view.findViewById(R.id.title);
         titleTxt.setText(title);
-        list.addHeaderView(view);
+        if (list.getHeaderViewsCount() < 1) {
+            list.addHeaderView(view);
+        }
     }
 
     private void notifyDataSetChangedAll(){
@@ -524,6 +573,10 @@ public class CotacaoFragment extends Fragment {
                     mCotacoesEnvio
             );
             new SendCotacaoAsync(getContext(), mView).execute();
+        } else {
+            Snackbar snackbar = Snackbar
+                    .make(mView, getContext().getResources().getText(R.string.sem_conexao), Snackbar.LENGTH_LONG);
+            snackbar.show();
         }
     }
 
@@ -610,5 +663,50 @@ public class CotacaoFragment extends Fragment {
         int aceita = SharedPref.getInt(getContext(), "aceitaGenerico");
         int nAceita = SharedPref.getInt(getContext(), "n_aceitaGenerico");
         return aceita > nAceita;
+    }
+
+    private void decrement(){
+        Utils.hideSoftKeyBoard(getActivity());
+        mQtd.requestFocus();
+        if (!mQtd.getText().toString().isEmpty()) {
+            int qtd = Integer.parseInt(mQtd.getText().toString());
+            if (qtd <= 0) {
+                mQtd.setText("10000");
+            } else if (qtd > 10000) {
+                mQtd.setText("0");
+            } else {
+                mQtd.setText(--qtd + "");
+            }
+        } else {
+            mQtd.setText("10000");
+        }
+    }
+
+    private void increment(){
+        Utils.hideSoftKeyBoard(getActivity());
+        mQtd.requestFocus();
+        int qtd = 0;
+        if (!mQtd.getText().toString().isEmpty()) {
+            qtd = Integer.parseInt(mQtd.getText().toString());
+            if (qtd >= 10000) {
+                mQtd.setText("0");
+            } else {
+                mQtd.setText(++qtd + "");
+            }
+        } else {
+            mQtd.setText("1");
+        }
+    }
+
+    class RptUpdater implements Runnable {
+        public void run() {
+            if( mAutoIncrement ){
+                increment();
+                repeatUpdateHandler.postDelayed( new RptUpdater(), 50 );
+            } else if( mAutoDecrement ){
+                decrement();
+                repeatUpdateHandler.postDelayed( new RptUpdater(), 50 );
+            }
+        }
     }
 }

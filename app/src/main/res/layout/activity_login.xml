@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/root"
+    >
 
     <RelativeLayout
         android:layout_width="600dp"
@@ -40,6 +42,7 @@
             android:text="@string/lbl_usuario"
             android:textSize="30dp" />
 
+
         <EditText
             android:id="@+id/edt_usuario"
             android:layout_width="match_parent"
@@ -48,6 +51,7 @@
             android:drawablePadding="@dimen/padding_minimum"
             android:drawableStart="@drawable/ic_account_grey600_24dp"
             android:inputType="text"
+            android:hint="@string/digite_usuario"
             android:text="milton.araujo"
             />
 
@@ -57,7 +61,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/padding_small"
             android:text="@string/lbl_senha"
-            android:textSize="30dp" />
+            android:textSize="30dp"
+            />
 
         <EditText
             android:id="@+id/edt_senha"
@@ -67,7 +72,9 @@
             android:drawablePadding="@dimen/padding_minimum"
             android:drawableStart="@drawable/ic_lock_outline_grey600_24dp"
             android:inputType="textPassword"
-            android:text="945825306-30"/>
+            android:hint="@string/digite_senha"
+            android:text="945825306-30"
+            />
 
         <Button
             android:id="@+id/button_send"

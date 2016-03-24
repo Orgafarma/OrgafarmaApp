@@ -15,6 +15,7 @@
         android:text="asdfasdfasdfasdf"
         android:textColor="@color/black"
         android:gravity="center"
+        android:singleLine="true"
 
         />
 

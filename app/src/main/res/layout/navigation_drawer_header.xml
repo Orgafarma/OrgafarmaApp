@@ -36,7 +36,9 @@
             android:layout_gravity="center"
             android:gravity="center_vertical"
             android:text="Felipe Lemos"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:singleLine="true"
+            />
 
         <TextView
             android:id="@+id/email"
@@ -45,7 +47,9 @@
             android:layout_gravity="center"
             android:gravity="center_vertical"
             android:text="ti@orgafarma.com.br"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:singleLine="true"
+            />
 
         <TextView
             android:id="@+id/empresa"
@@ -54,7 +58,9 @@
             android:layout_gravity="center"
             android:gravity="center_vertical"
             android:text="Orgafarma"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:singleLine="true"
+            />
 
     </LinearLayout>
 

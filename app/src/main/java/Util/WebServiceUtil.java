@@ -34,7 +34,7 @@ public class WebServiceUtil {
 
     private static final String SOAP_ACTION = "urn:hellowsdl#hello";
     private static final String NAMESPACE = "urn:hellowsdl";
-    private static final String URL = "http://www.orgafarma.com.br/ws?wsdl";
+    private static final String URL = "http://www.orgafarma.com.br/ws?wsdl"; //"http://10.1.0.136/webservice.php?wsdl";
     private static String METHOD_NAME;
 
     public static ValidacaoLogin loginWebService(String usuario, String senha) throws SoapFault {
@@ -178,11 +178,9 @@ public class WebServiceUtil {
             Object response = envelope.getResponse();
             return response.toString();
         }
-
         catch (IOException e) {
             return null;
         }
-
         catch (XmlPullParserException e) {
             return null;
         }

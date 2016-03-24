@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -27,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 
 import BO.VendasBO;
 import adapter.VerCotacaoAdapter;
@@ -44,7 +46,7 @@ import helperClass.Utils;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class VerCotacoesFragment extends Fragment {
+public class VerCotacoesFragment extends BaseFragment {
 
     //  ---  Views
     private EditText mDataInicio;
@@ -137,7 +139,7 @@ public class VerCotacoesFragment extends Fragment {
         mBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (checkDataInputs()) {
+                if (checkDataInputs() && Utils.checkConnection(getContext())) {
                     buscar();
                 } else {
                     Snackbar snackbar = Snackbar
@@ -146,6 +148,7 @@ public class VerCotacoesFragment extends Fragment {
                 }
             }
         });
+        mBuscar.requestFocus();
     }
 
     private boolean checkDataInputs(){
@@ -174,6 +177,7 @@ public class VerCotacoesFragment extends Fragment {
 
     private void initListView(){
         mLvCotacoes = (ExpandableListView) mView.findViewById(R.id.cotacoes);
+        Collections.reverse(mItemVerCotacoes.getItens());
         VerCotacaoAdapter adapter = new VerCotacaoAdapter(mItemVerCotacoes.getItens(), getActivity().getApplicationContext(), new VerCotacaoAdapter.VerCotacao() {
             @Override
             public void Mais(ItemVerCotacao Cotacao, int index) {
@@ -193,7 +197,7 @@ public class VerCotacoesFragment extends Fragment {
         mLvCotacoes.setAdapter(adapter);
     }
 
-    private void showDialogCotacao(){
+    private void showDialogCotacao(final ProgressDialog progressDialog){
         final int PENDENTE = 1;
         final int FINALIZADO = 2;
 
@@ -214,6 +218,8 @@ public class VerCotacoesFragment extends Fragment {
         codCotacao.setText(item.getCodigoCotacao());
         vlrCotacao.setText(Utils.formatarDecimal(item.getVlrTotal(), 1));
         dataPedido.setText(item.getData());
+        String usuarioEnce = (item.getUsuarioEncerramento() != null) ? item.getUsuarioEncerramento() : "";
+        usuarioEncerramento.setText(usuarioEnce);
 
         switch (Integer.parseInt(item.getStatus())){
             case PENDENTE:
@@ -237,6 +243,18 @@ public class VerCotacoesFragment extends Fragment {
         builder.setView(view);
         builder.setPositiveButton("OK", null);
         builder.show();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                    }
+                });
+            }
+        }, 3000);
     }
 
     private class LoadingAsync extends AsyncTask<Void, Void, TodosItemVerCotacao> {
@@ -264,12 +282,10 @@ public class VerCotacoesFragment extends Fragment {
             try {
                 mItemVerCotacoes =  gson.fromJson(new JSONObject(VendasBO.buscarCotacoes(gson.toJson(mCurrentBusca))).toString(), TodosItemVerCotacao.class);
             } catch (JSONException e) {
-                Log.i("ERRO", e.getMessage());
+                showMessageErro(mView, e);
                 return null;
             } catch(Exception ex){
-                Snackbar snackbar = Snackbar
-                        .make(mView, getContext().getResources().getText(R.string.prob_config), Snackbar.LENGTH_LONG);
-                snackbar.show();
+                showMessageErro(mView, ex);
             }
             return mItemVerCotacoes;
         }
@@ -315,9 +331,7 @@ public class VerCotacoesFragment extends Fragment {
                 Log.i("ERRO", e.getMessage());
                 return null;
             } catch(Exception ex){
-                Snackbar snackbar = Snackbar
-                        .make(mView, getContext().getResources().getText(R.string.prob_config), Snackbar.LENGTH_LONG);
-                snackbar.show();
+                showMessageErro(mView, ex);
             }
             return mItensCotacaoEspecifico;
         }
@@ -325,13 +339,10 @@ public class VerCotacoesFragment extends Fragment {
         @Override
         protected void onPostExecute(ListItemVerCotacaoEspecifico cotacao) {
             if (mItensCotacaoEspecifico != null) {
-                showDialogCotacao();
+                showDialogCotacao(progressDialog);
             } else {
-                Snackbar snackbar = Snackbar
-                        .make(mView, getContext().getResources().getText(R.string.prob_config), Snackbar.LENGTH_LONG);
-                snackbar.show();
+                showMessageErro(mView, new Exception("mItensCoracaoEspecifico está com valor nulo"));
             }
-            progressDialog.dismiss();
         }
     }
 
@@ -344,9 +355,7 @@ public class VerCotacoesFragment extends Fragment {
             mCurrentBusca = new BuscarCotacao(codRepresentante, dataInicio, dataFim, status);
             new LoadingAsync(getContext(), mView).execute();
         } catch (Exception ex){
-            Snackbar snackbar = Snackbar
-                    .make(mView, getContext().getResources().getText(R.string.prob_config), Snackbar.LENGTH_LONG);
-            snackbar.show();
+            showMessageErro(mView, ex);
         }
     }
 }

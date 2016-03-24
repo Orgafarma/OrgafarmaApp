@@ -8,10 +8,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import client.com.br.orgafarma.Modal.ItemVerCotacao;
 import client.com.br.orgafarma.R;
+import helperClass.Utils;
 
 /**
  * Created by rodolfo.rezende on 22/02/2016.
@@ -54,15 +57,17 @@ public class VerCotacaoAdapter extends BaseAdapter {
 
         final ItemVerCotacao item = mItens.get(position);
         View view = LayoutInflater.from(mCtx).inflate(R.layout.item_ver_cotacao, null);
+        TextView cliente = (TextView) view.findViewById(R.id.cliente);
         TextView data = (TextView) view.findViewById(R.id.data);
         TextView qtdItens = (TextView) view.findViewById(R.id.qtdItens);
         TextView vlrTotal = (TextView) view.findViewById(R.id.vlrTotal);
         TextView status = (TextView) view.findViewById(R.id.status);
         ImageView mais = (ImageView) view.findViewById(R.id.mais);
 
+        cliente.setText(item.getCliente());
         data.setText(item.getData());
         qtdItens.setText(item.getQtdItens());
-        vlrTotal.setText(item.getVlrTotal());
+        vlrTotal.setText(Utils.formatarDecimal(item.getVlrTotal().toString(), 2));
 
         switch (Integer.parseInt(item.getStatus())){
             case PENDENTE:

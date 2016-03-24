@@ -25,27 +25,35 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import BO.VendasBO;
-import client.com.br.orgafarma.ActivityPrincipal;
+import client.com.br.orgafarma.Activities.ActivityPrincipal;
 import client.com.br.orgafarma.Modal.Logistica;
 import client.com.br.orgafarma.Modal.Mes;
 import client.com.br.orgafarma.Modal.PrevisaoVenda;
 import client.com.br.orgafarma.R;
+import helperClass.Utils;
 
 
-public class InboxFragment extends Fragment {
-    private static View mView;
+public class InboxFragment extends BaseFragment {
+    private View mView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (mView == null) {
-            mView = inflater.inflate(R.layout.fragment_inbox, container, false);
-            ((ActivityPrincipal) getActivity()).getSupportActionBar().setTitle("VendaMes do Mês");
-            new LoadingAsync(getActivity(), mView).execute();
-        }
+        mView = inflater.inflate(R.layout.fragment_inbox, container, false);
+        initViews();
+        ((ActivityPrincipal) getActivity()).getSupportActionBar().setTitle("VendaMes do Mês");
+        new LoadingAsync(getActivity(), mView).execute();
         return mView;
+    }
+
+    private void initViews(){
+        TextView mes = (TextView) mView.findViewById(R.id.mes);
+        mes.setText("Mês: " + Utils.getCurrentMonthName());
     }
 
     private class LoadingAsync extends AsyncTask<Void, Void, PrevisaoVenda> {
@@ -79,9 +87,7 @@ public class InboxFragment extends Fragment {
                 Log.i("ERRO", e.getMessage());
                 return  null;
             } catch (Exception ex){
-                Snackbar snackbar = Snackbar
-                        .make(mView, getContext().getResources().getText(R.string.prob_config), Snackbar.LENGTH_LONG);
-                snackbar.show();
+                showMessageErro(mView, ex);
                 return null;
             }
 

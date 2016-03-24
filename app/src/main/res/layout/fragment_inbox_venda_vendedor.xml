@@ -81,7 +81,7 @@
                         android:id="@+id/dia_do_mes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="13"
+                        android:text=""
                         android:textColor="@color/branco"
                         android:textSize="20sp" />
 
@@ -104,7 +104,7 @@
                         android:id="@+id/mes_descricao"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Novembro"
+                        android:text=""
                         android:textColor="@color/branco"
                         android:textSize="16sp" />
 

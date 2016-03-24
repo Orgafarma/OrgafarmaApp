@@ -1,47 +1,40 @@
-package client.com.br.orgafarma;
+package client.com.br.orgafarma.Activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import com.google.gson.Gson;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.ksoap2.SoapFault;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-
 import BO.LoginBO;
-import BO.VendasBO;
 import Constantes.SharePreferenceCons;
 import Dominio.ValidacaoLogin;
 import Util.MensagemUtil;
-import Util.WebServiceUtil;
 import application.OrgafarmaApplication;
-import client.com.br.orgafarma.Modal.TodosItemVerCotacao;
+import client.com.br.orgafarma.R;
+import helperClass.Utils;
 
 /**
  * Created by Felipe on 16/11/2015.
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     // --  primitives
-    private String username,password;
+    private String username, password;
     private Boolean saveLogin;
 
     // --  Objects
@@ -55,50 +48,105 @@ public class LoginActivity extends AppCompatActivity {
     private EditText edtlogin;
     private EditText edtSenha;
     private CheckBox saveLoginCheckBox;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_login);
+        initViews();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
 
+    public void logar(View view) {
+        if (Utils.checkConnection(this)) {
+            new LodingAsync().execute();
+        } else {
+            Intent intent = new Intent(this, NoConnection.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    private void initViews(){
         edtlogin = (EditText) findViewById(R.id.edt_usuario);
         edtSenha = (EditText) findViewById(R.id.edt_senha);
 
-        saveLoginCheckBox = (CheckBox)findViewById(R.id.saveLoginCheckBox);
+        saveLoginCheckBox = (CheckBox) findViewById(R.id.saveLoginCheckBox);
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
 
         saveLogin = loginPreferences.getBoolean("saveLogin", false);
 
-        if(saveLogin == true){
+        if (saveLogin == true) {
             OrgafarmaApplication.TOKEN = loginPreferences.getString(SharePreferenceCons.Login.TOKEN, "");
             OrgafarmaApplication.REPRESENTANTE_ID = loginPreferences.getString(SharePreferenceCons.Login.REPRESENTANTE_ID, "");
             OrgafarmaApplication.REPRESENTANTE_CODIGO = loginPreferences.getString(SharePreferenceCons.Login.REPRESENTANTE_COD, "");
             OrgafarmaApplication.NOME_REPRESENTANTE = loginPreferences.getString(SharePreferenceCons.Login.NOME_REPRESENTANTE, "");
-            OrgafarmaApplication.EMPRESA_NOME = loginPreferences.getString(SharePreferenceCons.Login.EMPRESA_NOME, "");\
+            OrgafarmaApplication.EMPRESA_NOME = loginPreferences.getString(SharePreferenceCons.Login.EMPRESA_NOME, "");
             OrgafarmaApplication.EMAIL = loginPreferences.getString(SharePreferenceCons.Login.EMAIL, "");
 
             Intent i = new Intent(LoginActivity.this, ActivityPrincipal.class);
-            i.putExtra("msg", "Logado com Sucesso");
             startActivity(i);
             finish();
         }
     }
+    @Override
+    public void onStart() {
+        super.onStart();
 
-    public void logar(View view) {
-        new LodingAsync().execute();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Login Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://client.com.br.orgafarma/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Login Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://client.com.br.orgafarma/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 
     private class LodingAsync extends AsyncTask<Void, Void, ValidacaoLogin> {
-
         ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
-        String usuario = edtlogin.getText().toString();
-        String senha = edtSenha.getText().toString();
+        String usuario = "";
+        String senha = "";
 
         @Override
         protected void onPreExecute() {
             // TODO Auto-generated method stub
+            usuario = edtlogin.getText().toString();
+            senha = edtSenha.getText().toString();
             progressDialog.setMessage("Carregando...");
             progressDialog.setCancelable(false);
             progressDialog.show();
@@ -114,9 +162,9 @@ public class LoginActivity extends AppCompatActivity {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (SoapFault soapFault) {
-                soapFault.printStackTrace();
+                showMessageErro(findViewById(R.id.root), soapFault);
             } catch (RuntimeException e) {
-                e.printStackTrace();
+                showMessageErro(findViewById(R.id.root), e);
             }
             return null;
         }
@@ -174,12 +222,9 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }
             } catch (NullPointerException ex) {
-                ex.printStackTrace();
-                Snackbar snackbar = Snackbar
-                        .make(getWindow().getDecorView(), getApplicationContext().getResources().getText(R.string.prob_config), Snackbar.LENGTH_LONG);
-                snackbar.show();
+                showMessageErro(findViewById(R.id.root), ex);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                showMessageErro(findViewById(R.id.root), ex);
             }
         }
     }

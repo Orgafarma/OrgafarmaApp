@@ -1,12 +1,16 @@
 package helperClass;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by rodolfo.rezende on 24/02/2016.
@@ -66,4 +70,18 @@ public class Utils {
         return numberFormat.format(value);
     }
 
+    public static void hideSoftKeyBoard(Activity currentActivity){
+        View view = currentActivity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)currentActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    public static String getCurrentMonthName(){
+        Calendar cal=Calendar.getInstance();
+        SimpleDateFormat month_date = new SimpleDateFormat("MMMM", new Locale("pt", "BR"));
+        String monthName = month_date.format(cal.getTime());
+        return monthName;
+    }
 }

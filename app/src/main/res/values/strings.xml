@@ -1,10 +1,14 @@
 <resources>
     <string name="app_name">Orgafarma</string>
 
+
+    <!-- login -->
     <string name="lbl_senha">Senha</string>
     <string name="lbl_usuario">Usuario</string>
     <string name="btn_logar">Logar</string>
     <string name="url_site">www.orgafarma.com.br</string>
+    <string name="digite_usuario">Digite o seu usuário</string>
+    <string name="digite_senha">*********</string>
 
     <string name="action_settings">Configuração</string>
 
@@ -30,6 +34,7 @@
     <string name="cliente_nao_cadastrado">Cliente não cadastrado :-(</string>
     <string name="cotacao_realizada">Cotação realizada com sucesso!        ;-) </string>
     <string name="cotacao_falha">Falha no envio da cotação        :-( </string>
+    <string name="sem_conexao">Conecte-se para enviar a cotação :-|</string>
     <string name="Cliente">Cliente</string>
     <string name="indefined">Indefinido</string>
     <string name="pendente">Pendente</string>
@@ -40,9 +45,9 @@
     <!-- ver cotações -->
     <string name="ver_cotacoes">Ver Cotações</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="title_activity_no_connection">NoConnection</string>
 
 
 </resources>

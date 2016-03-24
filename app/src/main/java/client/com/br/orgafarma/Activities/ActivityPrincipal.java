@@ -1,4 +1,4 @@
-package client.com.br.orgafarma;
+package client.com.br.orgafarma.Activities;
 
 /**
  * Created by Felipe on 16/11/2015.
@@ -28,6 +28,8 @@ import client.com.br.orgafarma.Fragment.CotacaoFragment;
 import client.com.br.orgafarma.Fragment.InboxFragment;
 import client.com.br.orgafarma.Fragment.InboxVendaVendedorFragment;
 import client.com.br.orgafarma.Fragment.VerCotacoesFragment;
+import client.com.br.orgafarma.R;
+import helperClass.Utils;
 
 public class ActivityPrincipal extends AppCompatActivity {
 
@@ -40,11 +42,11 @@ public class ActivityPrincipal extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
 
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setLogo(R.mipmap.ic_launcher);
         setSupportActionBar(toolbar);
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
-
         actionBar = getSupportActionBar();
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -70,8 +72,6 @@ public class ActivityPrincipal extends AppCompatActivity {
         setupNavigationDrawerContent(navigationView);
 
         setFragment(0);
-
-
     }
 
     // A method to find height of the status bar
@@ -94,6 +94,7 @@ public class ActivityPrincipal extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                Utils.hideSoftKeyBoard(this);
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
         }
@@ -142,22 +143,22 @@ public class ActivityPrincipal extends AppCompatActivity {
             case R.id.navigation_sub_item_1:
                 InboxFragment inboxFragment = new InboxFragment();
                 fragmentTransaction.replace(R.id.fragment, inboxFragment);
-                fragmentTransaction.commit();
+                fragmentTransaction.commitAllowingStateLoss();
                 break;
             case R.id.navigation_sub_item_2:
                 InboxVendaVendedorFragment fragment = new InboxVendaVendedorFragment();
                 fragmentTransaction.replace(R.id.fragment, fragment);
-                fragmentTransaction.commit();
+                fragmentTransaction.commitAllowingStateLoss();
                 break;
             case R.id.navigation_cotacao:
                 CotacaoFragment cotacaoFragment = new CotacaoFragment();
                 fragmentTransaction.replace(R.id.fragment, cotacaoFragment);
-                fragmentTransaction.commit();
+                fragmentTransaction.commitAllowingStateLoss();
                 break;
             case R.id.navigation_ver_cotacoes:
                 VerCotacoesFragment verCotacaoFrag = new VerCotacoesFragment();
                 fragmentTransaction.replace(R.id.fragment, verCotacaoFrag);
-                fragmentTransaction.commit();
+                fragmentTransaction.commitAllowingStateLoss();
                 break;
         }
     }

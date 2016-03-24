@@ -1,4 +1,4 @@
-package client.com.br.orgafarma;
+package client.com.br.orgafarma.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.os.Handler;
+
+import client.com.br.orgafarma.R;
 
 
 public class SplashScreen extends AppCompatActivity {

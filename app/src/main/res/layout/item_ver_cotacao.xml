@@ -7,9 +7,21 @@
     >
 
     <TextView
+        android:id="@+id/cliente"
+        android:layout_width="0dp"
+        android:layout_weight="1.3"
+        android:layout_height="wrap_content"
+        android:text="Data"
+        android:gravity="center"
+        style="@style/verCotacaoStyleItem"
+        android:ellipsize="end"
+        android:singleLine="true"
+        />
+
+    <TextView
         android:id="@+id/data"
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight=".6"
         android:layout_height="wrap_content"
         android:text="Data"
         android:gravity="center"
@@ -19,7 +31,7 @@
     <TextView
         android:id="@+id/qtdItens"
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight=".7"
         android:layout_height="wrap_content"
         android:text="Qtd de Itens"
         android:gravity="center"
@@ -29,7 +41,7 @@
     <TextView
         android:id="@+id/vlrTotal"
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight=".7"
         android:layout_height="wrap_content"
         android:text="Valor Total"
         android:gravity="center"
@@ -39,7 +51,7 @@
     <TextView
         android:id="@+id/status"
         android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_weight=".7"
         android:layout_height="wrap_content"
         android:text="Status"
         android:gravity="center"
@@ -49,7 +61,7 @@
     <ImageView
         android:id="@+id/mais"
         android:layout_width="0dp"
-        android:layout_weight="0.4"
+        android:layout_weight="0.3"
         android:layout_height="wrap_content"
         android:text="Analise"
         android:gravity="center"

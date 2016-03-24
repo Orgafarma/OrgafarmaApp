@@ -9,47 +9,38 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
 import BO.VendasBO;
-import client.com.br.orgafarma.ActivityPrincipal;
+import client.com.br.orgafarma.Activities.ActivityPrincipal;
 import client.com.br.orgafarma.Modal.Pacote;
-import client.com.br.orgafarma.Modal.PrazoMedio;
-import client.com.br.orgafarma.Modal.PrevisaoVendaVendedorTelevendas;
 import client.com.br.orgafarma.Modal.VendaTelevenda;
-import client.com.br.orgafarma.Modal.VendaVendedorTelevendas;
 import client.com.br.orgafarma.R;
 
 
-public class InboxVendaVendedorFragment extends Fragment {
-    private static View mView;
+public class InboxVendaVendedorFragment extends BaseFragment {
+    private View mView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (mView == null) {
-            mView = inflater.inflate(R.layout.fragment_inbox_venda_vendedor, container, false);
-            ((ActivityPrincipal) getActivity()).getSupportActionBar().setTitle("VendaMes Vendedor/Televendas");
-            new LoadingAsync(getActivity(), mView).execute();
-        }
+        mView = inflater.inflate(R.layout.fragment_inbox_venda_vendedor, container, false);
+        ((ActivityPrincipal) getActivity()).getSupportActionBar().setTitle("VendaMes Vendedor/Televendas");
+        new LoadingAsync(getActivity(), mView).execute();
         return mView;
     }
 
@@ -80,12 +71,10 @@ public class InboxVendaVendedorFragment extends Fragment {
             try {
                 vendaTelevenda = gson.fromJson(new JSONObject(VendasBO.listaVendaVendedorTelevendas(getContext())).toString(), VendaTelevenda.class);
             } catch (JSONException e) {
-                Log.i("ERRO", e.getMessage());
+                showMessageErro(mView, e);
                 return null;
             } catch (Exception ex){
-                Snackbar snackbar = Snackbar
-                        .make(mView, getContext().getResources().getText(R.string.prob_config), Snackbar.LENGTH_LONG);
-                snackbar.show();
+                showMessageErro(mView, ex);
                 return null;
             }
             return vendaTelevenda;

@@ -18,13 +18,33 @@ public class ItemVerCotacao implements Serializable{
     @SerializedName("quantidade_total")
     private String qtdItens;
 
-
     @SerializedName("valor_total")
-
     private String vlrTotal;
 
     @SerializedName("status")
     private String status;
+
+    @SerializedName("cliente")
+    private String cliente;
+
+    @SerializedName("usuario_encerramento")
+    private String usuarioEncerramento;
+
+    public String getUsuarioEncerramento() {
+        return usuarioEncerramento;
+    }
+
+    public void setUsuarioEncerramento(String usuarioEncerramento) {
+        this.usuarioEncerramento = usuarioEncerramento;
+    }
+
+    public String getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(String cliente) {
+        this.cliente = cliente;
+    }
 
     public ItemVerCotacao(String data, String qtdItens, String vlrTotal, String status) {
 
